@@ -1,8 +1,11 @@
 import '../base.js';
-import { renderNavbar } from '../ui/components/navbar.js';
+import { renderNavbar, setupNavbarHandlers } from '../ui/components/navbar.js';
 
-// Render navbar
-document.querySelector('#nav').innerHTML = renderNavbar('catalog');
+// Render navbar (async)
+(async () => {
+  document.querySelector('#nav').innerHTML = await renderNavbar('catalog');
+  setupNavbarHandlers();
+})();
 
 // Render page content
 document.querySelector('#app').innerHTML = `
