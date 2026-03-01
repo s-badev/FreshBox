@@ -1,6 +1,7 @@
 import '../base.js';
 import { renderNavbar, setupNavbarHandlers } from '../ui/components/navbar.js';
 import { fetchCategories, fetchProducts, getProductImageUrl } from '../services/catalogService.js';
+import { addToCart, getTotals } from '../services/cartService.js';
 
 // ---- State ----
 let allProducts = [];
@@ -152,7 +153,7 @@ function renderProducts() {
             <div class="d-flex justify-content-between align-items-center mt-2">
               <span class="fw-bold text-success fs-5">${Number(product.price).toFixed(2)} лв/${product.unit}</span>
               <button class="btn btn-sm btn-outline-success add-to-cart-btn"
-                      data-id="${product.id}" data-name="${product.name}"
+                      data-product='${JSON.stringify({ id: product.id, name: product.name, price: product.price, unit: product.unit, image_path: product.image_path })}'
                       ${!product.in_stock ? 'disabled' : ''}>
                 🛒 Добави
               </button>
@@ -166,18 +167,20 @@ function renderProducts() {
   // Attach add-to-cart handlers
   grid.querySelectorAll('.add-to-cart-btn').forEach(btn => {
     btn.addEventListener('click', () => {
-      const name = btn.dataset.name;
-      showCartToast(name);
+      const product = JSON.parse(btn.dataset.product);
+      addToCart(product);
+      const { itemsCount } = getTotals();
+      showCartToast(product.name, itemsCount);
     });
   });
 }
 
 // ---- Toast helper ----
-function showCartToast(productName) {
+function showCartToast(productName, itemsCount) {
   const toastBody = document.querySelector('#cartToastBody');
-  toastBody.textContent = `✅ „${productName}" е добавено в кошницата`;
+  toastBody.innerHTML = `✅ „${productName}" е добавено в кошницата &nbsp;<a href="/cart.html" class="text-white fw-bold">(${itemsCount} арт.)</a>`;
 
   const toastEl = document.querySelector('#cartToast');
-  const toast = bootstrap.Toast.getOrCreateInstance(toastEl, { delay: 2000 });
+  const toast = bootstrap.Toast.getOrCreateInstance(toastEl, { delay: 2500 });
   toast.show();
 }
