@@ -2,6 +2,8 @@ import '../base.js';
 import { renderNavbar, setupNavbarHandlers } from '../ui/components/navbar.js';
 import { getCart, updateQty, removeItem, clearCart, getTotals } from '../services/cartService.js';
 import { getProductImageUrl } from '../services/catalogService.js';
+import { getSession } from '../services/authService.js';
+import { createOrderFromCart } from '../services/orderService.js';
 
 // ---- Navbar ----
 (async () => {
@@ -14,6 +16,16 @@ document.querySelector('#app').innerHTML = `
   <div class="my-4">
     <h1 class="mb-4">Кошница</h1>
     <div id="cartContent"></div>
+  </div>
+
+  <!-- Toast container -->
+  <div class="toast-container position-fixed bottom-0 end-0 p-3">
+    <div id="cartToast" class="toast align-items-center border-0" role="alert">
+      <div class="d-flex">
+        <div class="toast-body" id="cartToastBody"></div>
+        <button type="button" class="btn-close me-2 m-auto" data-bs-dismiss="toast"></button>
+      </div>
+    </div>
   </div>
 `;
 
@@ -90,7 +102,7 @@ function renderCart() {
 
     <div class="d-flex justify-content-between align-items-center mt-3">
       <button id="clearCartBtn" class="btn btn-outline-danger btn-sm">🗑 Изчисти кошницата</button>
-      <a href="/orders.html" class="btn btn-success px-4">Към поръчката →</a>
+      <button id="checkoutBtn" class="btn btn-success px-4">📦 Поръчай</button>
     </div>
   `;
 
@@ -135,6 +147,53 @@ function renderCart() {
       renderCart();
     }
   });
+
+  // ---- Checkout handler ----
+  document.querySelector('#checkoutBtn').addEventListener('click', async () => {
+    const cart = getCart();
+    if (cart.length === 0) {
+      showToast('Кошницата е празна', true);
+      return;
+    }
+
+    // Auth check
+    const session = await getSession();
+    if (!session) {
+      showToast('Моля, влез в профила си, за да поръчаш', true);
+      setTimeout(() => { window.location.href = '/login.html'; }, 1500);
+      return;
+    }
+
+    const btn = document.querySelector('#checkoutBtn');
+    try {
+      btn.disabled = true;
+      btn.textContent = 'Изпращане...';
+
+      const orderId = await createOrderFromCart(cart);
+      clearCart();
+      showToast(`✅ Поръчка #${orderId} е създадена!`, false);
+
+      setTimeout(() => { window.location.href = '/orders.html'; }, 1500);
+    } catch (error) {
+      console.error('Checkout error:', error);
+      showToast('Грешка при поръчка: ' + (error.message || 'Опитай отново'), true);
+      btn.disabled = false;
+      btn.textContent = '📦 Поръчай';
+    }
+  });
+}
+
+// ---- Toast helper ----
+function showToast(text, isError = false) {
+  const toastEl = document.querySelector('#cartToast');
+  const toastBody = document.querySelector('#cartToastBody');
+  
+  toastEl.classList.remove('text-bg-success', 'text-bg-danger');
+  toastEl.classList.add(isError ? 'text-bg-danger' : 'text-bg-success');
+  toastBody.textContent = text;
+
+  const toast = bootstrap.Toast.getOrCreateInstance(toastEl, { delay: 2500 });
+  toast.show();
 }
 
 // ---- Initial render ----
