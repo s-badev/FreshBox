@@ -1,11 +1,18 @@
 import { getSession, signOut } from '../../services/authService.js';
+import { isAdmin } from '../../services/roleService.js';
 
 export async function renderNavbar(activePage = '') {
-  // Check if user is logged in
+  // Check if user is logged in and if they are admin
   let isLoggedIn = false;
+  let userIsAdmin = false;
+  
   try {
     const session = await getSession();
     isLoggedIn = !!session;
+    
+    if (isLoggedIn) {
+      userIsAdmin = await isAdmin();
+    }
   } catch (error) {
     console.error('Session check error:', error);
   }
@@ -14,9 +21,13 @@ export async function renderNavbar(activePage = '') {
     { href: '/index.html', label: 'Начало', page: 'landing' },
     { href: '/catalog.html', label: 'Каталог', page: 'catalog' },
     { href: '/cart.html', label: 'Кошница', page: 'cart' },
-    { href: '/orders.html', label: 'Моите поръчки', page: 'orders' },
-    { href: '/admin.html', label: 'Админ', page: 'admin' }
+    { href: '/orders.html', label: 'Моите поръчки', page: 'orders' }
   ];
+  
+  // Add admin link only for admins
+  if (userIsAdmin) {
+    navItems.push({ href: '/admin.html', label: 'Админ', page: 'admin' });
+  }
 
   return `
     <nav class="navbar navbar-expand-lg navbar-dark bg-success">
