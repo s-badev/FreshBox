@@ -23,13 +23,14 @@ function saveCart(cart) {
 /**
  * Добавя продукт в кошницата или увеличава количеството
  * @param {{ id, name, price, unit, image_path }} product
+ * @param {number} [qty=1] - Количество за добавяне
  */
-export function addToCart(product) {
+export function addToCart(product, qty = 1) {
   const cart = getCart();
   const existing = cart.find(item => item.id === product.id);
 
   if (existing) {
-    existing.qty += 1;
+    existing.qty += qty;
   } else {
     cart.push({
       id: product.id,
@@ -37,7 +38,7 @@ export function addToCart(product) {
       price: Number(product.price),
       unit: product.unit,
       image_path: product.image_path || null,
-      qty: 1
+      qty: qty
     });
   }
 

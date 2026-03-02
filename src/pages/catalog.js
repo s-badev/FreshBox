@@ -1,5 +1,5 @@
 import '../base.js';
-import { renderNavbar, setupNavbarHandlers } from '../ui/components/navbar.js';
+import { renderNavbar, setupNavbarHandlers, updateCartBadge } from '../ui/components/navbar.js';
 import { fetchCategories, fetchProducts, getProductImageUrl } from '../services/catalogService.js';
 import { addToCart, getTotals } from '../services/cartService.js';
 
@@ -143,8 +143,15 @@ function renderProducts() {
             </div>
             <h6 class="card-title mb-1">${product.name}</h6>
             <p class="card-text text-muted small flex-grow-1">${product.description || ''}</p>
-            <div class="d-flex justify-content-between align-items-center mt-2">
-              <span class="fw-bold text-success fs-5">${Number(product.price).toFixed(2)} лв/${product.unit}</span>
+            <div class="d-flex justify-content-between align-items-center mb-2">
+              <span class="product-price">${Number(product.price).toFixed(2)} <span class="product-unit">лв/${product.unit}</span></span>
+            </div>
+            <div class="product-action-row">
+              <div class="product-qty-stepper" data-id="${product.id}">
+                <button type="button" class="qty-step-btn qty-step-dec" aria-label="Намали">−</button>
+                <input type="number" class="qty-step-input" value="1" min="1" max="99" aria-label="Количество">
+                <button type="button" class="qty-step-btn qty-step-inc" aria-label="Увеличи">+</button>
+              </div>
               <button class="btn btn-sm btn-outline-success add-to-cart-btn"
                       data-product='${JSON.stringify({ id: product.id, name: product.name, price: product.price, unit: product.unit, image_path: product.image_path })}'
                       ${!product.in_stock ? 'disabled' : ''}>
@@ -161,9 +168,28 @@ function renderProducts() {
   grid.querySelectorAll('.add-to-cart-btn').forEach(btn => {
     btn.addEventListener('click', () => {
       const product = JSON.parse(btn.dataset.product);
-      addToCart(product);
+      const stepper = btn.closest('.product-action-row').querySelector('.qty-step-input');
+      const qty = Math.max(1, parseInt(stepper.value) || 1);
+      addToCart(product, qty);
+      stepper.value = 1; // Reset stepper
       const { itemsCount } = getTotals();
       showCartToast(product.name, itemsCount);
+      updateCartBadge();
+    });
+  });
+
+  // Attach qty stepper handlers
+  grid.querySelectorAll('.product-qty-stepper').forEach(stepper => {
+    const input = stepper.querySelector('.qty-step-input');
+    stepper.querySelector('.qty-step-dec').addEventListener('click', () => {
+      input.value = Math.max(1, (parseInt(input.value) || 1) - 1);
+    });
+    stepper.querySelector('.qty-step-inc').addEventListener('click', () => {
+      input.value = Math.min(99, (parseInt(input.value) || 1) + 1);
+    });
+    input.addEventListener('change', () => {
+      let v = parseInt(input.value) || 1;
+      input.value = Math.max(1, Math.min(99, v));
     });
   });
 }

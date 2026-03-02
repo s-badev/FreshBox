@@ -1,5 +1,5 @@
 import '../base.js';
-import { renderNavbar, setupNavbarHandlers } from '../ui/components/navbar.js';
+import { renderNavbar, setupNavbarHandlers, updateCartBadge } from '../ui/components/navbar.js';
 import { getCart, updateQty, removeItem, clearCart, getTotals } from '../services/cartService.js';
 import { getProductImageUrl } from '../services/catalogService.js';
 import { getSession } from '../services/authService.js';
@@ -30,72 +30,68 @@ function renderCart() {
   // Empty state
   if (cart.length === 0) {
     container.innerHTML = `
-      <div class="text-center py-5">
-        <p class="fs-5 text-muted mb-3">🛒 Кошницата е празна</p>
+      <div class="cart-empty text-center">
+        <span class="cart-empty-icon">🛒</span>
+        <p class="mb-3">Кошницата е празна</p>
         <a href="/catalog.html" class="btn btn-success">Разгледай каталога</a>
       </div>
     `;
+    updateCartBadge();
     return;
   }
 
   const { subtotal, itemsCount } = getTotals();
 
   container.innerHTML = `
-    <div class="table-responsive">
-      <table class="table align-middle">
-        <thead class="table-light">
-          <tr>
-            <th>Продукт</th>
-            <th class="text-center">Единична цена</th>
-            <th class="text-center" style="width: 160px;">Количество</th>
-            <th class="text-end">Сума</th>
-            <th></th>
-          </tr>
-        </thead>
-        <tbody id="cartRows">
-          ${cart.map(item => {
-            const imageHtml = item.image_path
-              ? `<img src="${getProductImageUrl(item.image_path)}" alt="${item.name}" width="48" height="48" class="rounded object-fit-cover me-2" style="object-fit:cover;">`
-              : `<span class="me-2" style="font-size:2rem;">📦</span>`;
+    <div class="cart-layout">
+      <!-- Cart items -->
+      <div class="cart-items-card">
+        ${cart.map(item => {
+          const imageHtml = item.image_path
+            ? `<img src="${getProductImageUrl(item.image_path)}" alt="${item.name}" class="cart-item-img" onerror="this.onerror=null; this.outerHTML='<div class=\\'cart-item-img-placeholder\\'>📦</div>';">`
+            : `<div class="cart-item-img-placeholder">📦</div>`;
 
-            return `
-              <tr data-id="${item.id}">
-                <td>
-                  <div class="d-flex align-items-center">
-                    ${imageHtml}
-                    <span class="fw-semibold">${item.name}</span>
-                  </div>
-                </td>
-                <td class="text-center">${item.price.toFixed(2)} лв/${item.unit}</td>
-                <td class="text-center">
-                  <div class="input-group input-group-sm justify-content-center" style="width:130px; margin: 0 auto;">
-                    <button class="btn btn-outline-secondary qty-dec" data-id="${item.id}" type="button">−</button>
-                    <input type="number" class="form-control text-center qty-input" data-id="${item.id}"
-                           value="${item.qty}" min="1" max="99" style="max-width:50px;">
-                    <button class="btn btn-outline-secondary qty-inc" data-id="${item.id}" type="button">+</button>
-                  </div>
-                </td>
-                <td class="text-end fw-semibold">${(item.price * item.qty).toFixed(2)} лв</td>
-                <td class="text-end">
-                  <button class="btn btn-sm btn-outline-danger remove-btn" data-id="${item.id}" title="Премахни">✕</button>
-                </td>
-              </tr>
-            `;
-          }).join('')}
-        </tbody>
-        <tfoot class="table-light">
-          <tr>
-            <td colspan="3" class="text-end fw-bold">Общо (${itemsCount} арт.):</td>
-            <td class="text-end fw-bold fs-5 text-success">${subtotal.toFixed(2)} лв</td>
-            <td></td>
-          </tr>
-        </tfoot>
-      </table>
-    </div>
+          return `
+            <div class="cart-item" data-id="${item.id}">
+              ${imageHtml}
+              <div class="cart-item-info">
+                <p class="cart-item-name">${item.name}</p>
+                <p class="cart-item-unit-price">${item.price.toFixed(2)} лв/${item.unit}</p>
+              </div>
+              <div class="cart-item-qty">
+                <div class="cart-qty-stepper">
+                  <button type="button" class="qty-dec" data-id="${item.id}" aria-label="Намали">−</button>
+                  <input type="number" class="qty-input" data-id="${item.id}" value="${item.qty}" min="1" max="99" aria-label="Количество">
+                  <button type="button" class="qty-inc" data-id="${item.id}" aria-label="Увеличи">+</button>
+                </div>
+              </div>
+              <div class="cart-item-total">${(item.price * item.qty).toFixed(2)} лв</div>
+              <div class="cart-item-remove">
+                <button class="remove-btn" data-id="${item.id}" title="Премахни" aria-label="Премахни">✕</button>
+              </div>
+            </div>
+          `;
+        }).join('')}
+      </div>
 
-    <div class="d-flex justify-content-between align-items-center mt-3">
-      <button id="clearCartBtn" class="btn btn-outline-danger btn-sm">🗑 Изчисти кошницата</button>
-      <button id="checkoutBtn" class="btn btn-success px-4">📦 Поръчай</button>
+      <!-- Summary sidebar -->
+      <div class="cart-summary">
+        <div class="cart-summary-title">Обобщение</div>
+        <div class="cart-summary-row">
+          <span>Продукти (${itemsCount})</span>
+          <span>${subtotal.toFixed(2)} лв</span>
+        </div>
+        <div class="cart-summary-row">
+          <span>Доставка</span>
+          <span class="text-success fw-semibold">Безплатна</span>
+        </div>
+        <div class="cart-summary-row total">
+          <span>Общо</span>
+          <span class="cart-summary-amount">${subtotal.toFixed(2)} лв</span>
+        </div>
+        <button id="checkoutBtn" class="btn btn-success">� Поръчай</button>
+        <button id="clearCartBtn" class="btn btn-outline-danger btn-sm">� Изчисти кошницата</button>
+      </div>
     </div>
   `;
 
@@ -174,6 +170,9 @@ function renderCart() {
       btn.textContent = '📦 Поръчай';
     }
   });
+
+  // Update navbar cart badge after every render
+  updateCartBadge();
 }
 
 // ---- Toast helper (no bootstrap JS dependency) ----

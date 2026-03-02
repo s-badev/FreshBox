@@ -1,5 +1,6 @@
 import { getSession, signOut } from '../../services/authService.js';
 import { isAdmin } from '../../services/roleService.js';
+import { getTotals } from '../../services/cartService.js';
 
 export async function renderNavbar(activePage = '') {
   // Check if user is logged in and if they are admin
@@ -38,11 +39,14 @@ export async function renderNavbar(activePage = '') {
         </button>
         <div class="collapse navbar-collapse" id="navbarNav">
           <ul class="navbar-nav ms-auto">
-            ${navItems.map(item => `
+            ${navItems.map(item => {
+              const isCart = item.page === 'cart';
+              const badge = isCart ? `<span class="nav-cart-badge" id="cartBadge">${getTotals().itemsCount || ''}</span>` : '';
+              return `
               <li class="nav-item">
-                <a class="nav-link ${activePage === item.page ? 'active' : ''}" href="${item.href}">${item.label}</a>
+                <a class="nav-link ${activePage === item.page ? 'active' : ''}" href="${item.href}">${item.label}${badge}</a>
               </li>
-            `).join('')}
+            `;}).join('')}
             ${isLoggedIn ? `
               <li class="nav-item">
                 <button class="nav-link btn btn-link" id="logoutBtn">Изход</button>
@@ -72,5 +76,16 @@ export function setupNavbarHandlers() {
         alert('Грешка при изход: ' + error.message);
       }
     });
+  }
+}
+
+/**
+ * Обновява бройката на cart badge в навигацията
+ */
+export function updateCartBadge() {
+  const badge = document.getElementById('cartBadge');
+  if (badge) {
+    const count = getTotals().itemsCount;
+    badge.textContent = count || '';
   }
 }
