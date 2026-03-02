@@ -11,15 +11,13 @@ import { fetchMyOrders } from '../services/orderService.js';
 
 // ---- Shell ----
 document.querySelector('#app').innerHTML = `
-  <div class="my-4">
-    <h1 class="mb-4">Моите поръчки</h1>
-    <div id="ordersContent">
-      <div class="text-center py-5">
-        <div class="spinner-border text-success" role="status">
-          <span class="visually-hidden">Зареждане...</span>
-        </div>
-        <p class="text-muted mt-2">Зареждане на поръчки...</p>
+  <h1 class="page-heading">Моите поръчки</h1>
+  <div id="ordersContent">
+    <div class="fb-loading">
+      <div class="spinner-border" role="status">
+        <span class="visually-hidden">Зареждане...</span>
       </div>
+      <span>Зареждане на поръчки...</span>
     </div>
   </div>
 `;
@@ -40,8 +38,8 @@ const STATUS_MAP = {
     const session = await getSession();
     if (!session) {
       container.innerHTML = `
-        <div class="text-center py-5">
-          <p class="fs-5 text-muted mb-3">Моля, влез в профила си, за да видиш поръчките.</p>
+        <div class="orders-empty">
+          <p class="fs-5 mb-3">Моля, влез в профила си, за да видиш поръчките.</p>
           <a href="/login.html" class="btn btn-success">Вход</a>
         </div>
       `;
@@ -52,8 +50,8 @@ const STATUS_MAP = {
 
     if (!orders || orders.length === 0) {
       container.innerHTML = `
-        <div class="text-center py-5">
-          <p class="fs-5 text-muted mb-3">📦 Нямаш поръчки</p>
+        <div class="orders-empty">
+          <p class="fs-5 mb-3">📦 Нямаш поръчки</p>
           <a href="/catalog.html" class="btn btn-success">Разгледай каталога</a>
         </div>
       `;
@@ -61,7 +59,7 @@ const STATUS_MAP = {
     }
 
     container.innerHTML = `
-      <div class="accordion" id="ordersAccordion">
+      <div class="orders-list accordion" id="ordersAccordion">
         ${orders.map((order, idx) => {
           const status = STATUS_MAP[order.status] || { label: order.status, bg: 'secondary' };
           const date = new Date(order.created_at).toLocaleString('bg-BG', {
@@ -80,11 +78,11 @@ const STATUS_MAP = {
                   <div class="d-flex w-100 justify-content-between align-items-center me-3">
                     <span>
                       <strong>Поръчка #${order.id}</strong>
-                      <small class="text-muted ms-2">${date}</small>
+                      <small class="text-fb-muted ms-2">${date}</small>
                     </span>
                     <span>
-                      <span class="badge bg-${status.bg} me-2">${status.label}</span>
-                      <span class="fw-bold text-success">${Number(order.total_amount).toFixed(2)} лв</span>
+                      <span class="order-status-badge badge bg-${status.bg} me-2">${status.label}</span>
+                      <span class="fw-bold text-success-dark">${Number(order.total_amount).toFixed(2)} лв</span>
                     </span>
                   </div>
                 </button>

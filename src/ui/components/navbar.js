@@ -31,8 +31,8 @@ export async function renderNavbar(activePage = '') {
   }
 
   return `
-    <nav class="navbar navbar-expand-lg navbar-dark bg-success">
-      <div class="container-fluid">
+    <nav class="freshbox-nav navbar navbar-expand-lg">
+      <div class="container">
         <a class="navbar-brand" href="/index.html">🥬 FreshBox</a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
@@ -49,7 +49,7 @@ export async function renderNavbar(activePage = '') {
             `;}).join('')}
             ${isLoggedIn ? `
               <li class="nav-item">
-                <button class="nav-link btn btn-link" id="logoutBtn">Изход</button>
+                <button class="nav-link btn btn-link nav-logout-btn" id="logoutBtn">Изход</button>
               </li>
             ` : `
               <li class="nav-item">

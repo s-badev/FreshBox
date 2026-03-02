@@ -13,13 +13,11 @@ import { createOrderFromCart } from '../services/orderService.js';
 
 // ---- Render shell ----
 document.querySelector('#app').innerHTML = `
-  <div class="my-4">
-    <h1 class="mb-4">Кошница</h1>
-    <div id="cartContent"></div>
-  </div>
+  <h1 class="page-heading">Кошница</h1>
+  <div id="cartContent"></div>
 
   <!-- Toast container -->
-  <div id="toastContainer" class="position-fixed top-0 end-0 p-3" style="z-index: 1080;"></div>
+  <div id="toastContainer" class="fb-toast-container"></div>
 `;
 
 // ---- Render cart ----
@@ -60,9 +58,9 @@ function renderCart() {
               </div>
               <div class="cart-item-qty">
                 <div class="cart-qty-stepper">
-                  <button type="button" class="qty-dec" data-id="${item.id}" aria-label="Намали">−</button>
-                  <input type="number" class="qty-input" data-id="${item.id}" value="${item.qty}" min="1" max="99" aria-label="Количество">
-                  <button type="button" class="qty-inc" data-id="${item.id}" aria-label="Увеличи">+</button>
+                  <button type="button" class="qty-step-btn qty-dec" data-id="${item.id}" aria-label="Намали">−</button>
+                  <input type="number" class="qty-step-input qty-input" data-id="${item.id}" value="${item.qty}" min="1" max="99" aria-label="Количество">
+                  <button type="button" class="qty-step-btn qty-inc" data-id="${item.id}" aria-label="Увеличи">+</button>
                 </div>
               </div>
               <div class="cart-item-total">${(item.price * item.qty).toFixed(2)} лв</div>
@@ -89,8 +87,8 @@ function renderCart() {
           <span>Общо</span>
           <span class="cart-summary-amount">${subtotal.toFixed(2)} лв</span>
         </div>
-        <button id="checkoutBtn" class="btn btn-success">� Поръчай</button>
-        <button id="clearCartBtn" class="btn btn-outline-danger btn-sm">� Изчисти кошницата</button>
+        <button id="checkoutBtn" class="btn btn-success w-100 mb-2">📦 Поръчай</button>
+        <button id="clearCartBtn" class="btn btn-outline-danger btn-sm w-100">🗑️ Изчисти кошницата</button>
       </div>
     </div>
   `;
@@ -179,16 +177,15 @@ function renderCart() {
 function showToast(text, isError = false) {
   const container = document.querySelector('#toastContainer');
   const toast = document.createElement('div');
-  toast.className = `alert ${isError ? 'alert-danger' : 'alert-success'} shadow-sm mb-2 fade show`;
-  toast.setAttribute('role', 'alert');
+  toast.className = `fb-toast ${isError ? 'error' : 'success'}`;
   toast.textContent = text;
 
   container.appendChild(toast);
 
   setTimeout(() => {
-    toast.classList.remove('show');
-    toast.addEventListener('transitionend', () => toast.remove());
-    setTimeout(() => toast.remove(), 400);
+    toast.classList.add('removing');
+    toast.addEventListener('animationend', () => toast.remove());
+    setTimeout(() => toast.remove(), 500);
   }, 2500);
 }
 

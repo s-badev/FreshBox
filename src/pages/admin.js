@@ -46,19 +46,21 @@ import { isAdmin } from '../services/roleService.js';
     
     // Guard 3: User is admin - show admin panel
     appDiv.innerHTML = `
-      <div class="my-4">
-        <h1 class="mb-4">Админ панел</h1>
-        <div class="alert alert-success">
+      <div class="admin-header">
+        <h2>Админ панел</h2>
+      </div>
+      <div class="admin-card mb-4">
+        <div class="alert alert-success mb-0">
           <strong>Добре дошъл, администратор!</strong>
         </div>
-        <div class="alert alert-info">
-          <h5>Функционалности (очаквани):</h5>
-          <ul class="mb-0">
-            <li>Управление на продукти (добавяне, редактиране, изтриване)</li>
-            <li>Преглед на всички поръчки</li>
-            <li>Управление на потребители</li>
-          </ul>
-        </div>
+      </div>
+      <div class="admin-card">
+        <h5 class="mb-3" style="font-weight:600; color: var(--fb-gray-800);">Функционалности (очаквани):</h5>
+        <ul class="mb-0" style="color: var(--fb-gray-700);">
+          <li>Управление на продукти (добавяне, редактиране, изтриване)</li>
+          <li>Преглед на всички поръчки</li>
+          <li>Управление на потребители</li>
+        </ul>
       </div>
     `;
   } catch (error) {

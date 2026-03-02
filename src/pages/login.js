@@ -10,28 +10,25 @@ import { signUp, signIn } from '../services/authService.js';
 
 // Render page content
 document.querySelector('#app').innerHTML = `
-  <div class="row justify-content-center mt-5">
-    <div class="col-md-6 col-lg-4">
-      <div class="card shadow">
-        <div class="card-body p-4">
-          <h2 class="card-title text-center mb-4">Вход / Регистрация</h2>
-          <form id="authForm">
-            <div class="mb-3">
-              <label for="email" class="form-label">Email</label>
-              <input type="email" class="form-control" id="email" required>
-            </div>
-            <div class="mb-3">
-              <label for="password" class="form-label">Парола</label>
-              <input type="password" class="form-control" id="password" required>
-            </div>
-            <div class="d-grid gap-2">
-              <button type="button" id="loginBtn" class="btn btn-success">Вход</button>
-              <button type="button" id="registerBtn" class="btn btn-outline-success">Регистрация</button>
-            </div>
-          </form>
-          <div id="message" class="mt-3"></div>
+  <div class="auth-wrapper">
+    <div class="auth-card">
+      <h2 class="auth-card-title">Вход / Регистрация</h2>
+      <p class="auth-card-subtitle">Влез в профила си или създай нов акаунт</p>
+      <form id="authForm">
+        <div class="mb-3">
+          <label for="email" class="form-label">Email</label>
+          <input type="email" class="form-control" id="email" placeholder="example@mail.com" required>
         </div>
-      </div>
+        <div class="mb-3">
+          <label for="password" class="form-label">Парола</label>
+          <input type="password" class="form-control" id="password" placeholder="••••••••" required>
+        </div>
+        <div class="d-grid gap-2">
+          <button type="button" id="loginBtn" class="btn btn-success">Вход</button>
+          <button type="button" id="registerBtn" class="btn btn-outline-success">Регистрация</button>
+        </div>
+      </form>
+      <div id="message" class="auth-message"></div>
     </div>
   </div>
 `;

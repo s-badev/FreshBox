@@ -18,36 +18,55 @@ let searchQuery = '';
 
 // ---- Render shell (loading state) ----
 document.querySelector('#app').innerHTML = `
-  <div class="my-4">
-    <h1 class="mb-4">Каталог продукти</h1>
+  <h1 class="page-heading">Каталог продукти</h1>
 
-    <!-- Search + Filter row -->
-    <div class="row g-3 mb-4 catalog-filters">
-      <div class="col-md-6">
+  <!-- Mobile sidebar toggle -->
+  <button class="btn btn-outline-success catalog-sidebar-toggle" id="sidebarToggle">
+    ☰ Категории
+  </button>
+
+  <div class="catalog-wrapper">
+    <!-- Sidebar -->
+    <aside class="catalog-sidebar" id="catalogSidebar">
+      <div class="catalog-sidebar-title">Категории</div>
+      <div id="sidebarCategories">
+        <button class="cat-item active" data-cat="">Всички</button>
+      </div>
+    </aside>
+
+    <!-- Main area -->
+    <div class="catalog-main">
+      <!-- Filter bar -->
+      <div class="catalog-filter-bar">
         <input type="text" id="searchInput" class="form-control"
                placeholder="Търси по име на продукт…">
-      </div>
-      <div class="col-md-4">
-        <select id="categoryFilter" class="form-select">
+        <select id="categoryFilter" class="form-select" style="max-width:220px;">
           <option value="">Всички категории</option>
         </select>
       </div>
-    </div>
 
-    <!-- Product grid -->
-    <div id="productGrid" class="row g-4">
-      <div class="col-12 text-center py-5">
-        <div class="spinner-border text-success" role="status">
-          <span class="visually-hidden">Зареждане...</span>
+      <div id="resultsCount" class="catalog-results-count"></div>
+
+      <!-- Product grid -->
+      <div id="productGrid" class="product-grid">
+        <div class="fb-loading">
+          <div class="spinner-border" role="status">
+            <span class="visually-hidden">Зареждане...</span>
+          </div>
+          <span>Зареждане на продукти...</span>
         </div>
-        <p class="text-muted mt-2">Зареждане на продукти...</p>
       </div>
     </div>
   </div>
 
   <!-- Toast container -->
-  <div id="toastContainer" class="position-fixed top-0 end-0 p-3" style="z-index: 1080;"></div>
+  <div id="toastContainer" class="fb-toast-container"></div>
 `;
+
+// ---- Mobile sidebar toggle ----
+document.querySelector('#sidebarToggle').addEventListener('click', () => {
+  document.querySelector('#catalogSidebar').classList.toggle('show');
+});
 
 // ---- Event listeners ----
 document.querySelector('#searchInput').addEventListener('input', (e) => {
@@ -57,8 +76,18 @@ document.querySelector('#searchInput').addEventListener('input', (e) => {
 
 document.querySelector('#categoryFilter').addEventListener('change', (e) => {
   selectedCategoryId = e.target.value ? Number(e.target.value) : null;
+  syncSidebarActive();
   renderProducts();
 });
+
+// Sync sidebar active state with dropdown
+function syncSidebarActive() {
+  document.querySelectorAll('#sidebarCategories .cat-item').forEach(btn => {
+    const val = btn.dataset.cat;
+    const isActive = (val === '' && !selectedCategoryId) || (val && Number(val) === selectedCategoryId);
+    btn.classList.toggle('active', isActive);
+  });
+}
 
 // ---- Load data ----
 async function loadCatalog() {
@@ -75,6 +104,30 @@ async function loadCatalog() {
       opt.value = cat.id;
       opt.textContent = cat.name;
       select.appendChild(opt);
+    });
+
+    // Populate sidebar categories
+    const sidebar = document.querySelector('#sidebarCategories');
+    allCategories.forEach(cat => {
+      const btn = document.createElement('button');
+      btn.className = 'cat-item';
+      btn.dataset.cat = cat.id;
+      btn.textContent = cat.name;
+      btn.addEventListener('click', () => {
+        selectedCategoryId = Number(cat.id);
+        select.value = cat.id;
+        syncSidebarActive();
+        renderProducts();
+      });
+      sidebar.appendChild(btn);
+    });
+
+    // "All" button handler
+    sidebar.querySelector('[data-cat=""]').addEventListener('click', () => {
+      selectedCategoryId = null;
+      select.value = '';
+      syncSidebarActive();
+      renderProducts();
     });
 
     renderProducts();
@@ -108,12 +161,16 @@ function renderProducts() {
   // Empty state
   if (filtered.length === 0) {
     grid.innerHTML = `
-      <div class="col-12 text-center py-5">
-        <p class="text-muted fs-5">Няма намерени продукти</p>
+      <div class="text-center py-5" style="grid-column: 1/-1;">
+        <p class="text-fb-muted fs-5">Няма намерени продукти</p>
       </div>
     `;
+    document.querySelector('#resultsCount').textContent = '';
     return;
   }
+
+  // Results count
+  document.querySelector('#resultsCount').textContent = `${filtered.length} продукт${filtered.length === 1 ? '' : 'а'}`;
 
   // Build category lookup
   const catMap = {};
@@ -122,10 +179,8 @@ function renderProducts() {
   // Render cards
   grid.innerHTML = filtered.map(product => {
     const imageHtml = product.image_path
-      ? `<img src="${getProductImageUrl(product.image_path)}" class="card-img-top" alt="${product.name}" style="height: 180px; object-fit: cover;" onerror="this.onerror=null; this.parentElement.innerHTML='<div class=\\'bg-light d-flex align-items-center justify-content-center\\' style=\\'height:180px\\'><span class=\\'text-muted\\'>📷 Няма снимка</span></div>';">`
-      : `<div class="bg-light d-flex align-items-center justify-content-center" style="height: 180px;">
-           <span class="text-muted">📷 Няма снимка</span>
-         </div>`;
+      ? `<img src="${getProductImageUrl(product.image_path)}" class="card-img-top" alt="${product.name}" onerror="this.onerror=null; this.parentElement.innerHTML='<div class=\\'product-img-placeholder\\'>📷</div>';">`
+      : `<div class="product-img-placeholder">📷</div>`;
 
     const categoryLabel = catMap[product.category_id] || '';
     const stockBadge = product.in_stock
@@ -133,31 +188,29 @@ function renderProducts() {
       : '<span class="badge bg-secondary">Изчерпан</span>';
 
     return `
-      <div class="col-sm-6 col-md-4 col-lg-3">
-        <div class="card h-100 shadow-sm">
-          ${imageHtml}
-          <div class="card-body d-flex flex-column">
-            <div class="d-flex justify-content-between align-items-start mb-1">
-              <small class="text-muted">${categoryLabel}</small>
-              ${stockBadge}
+      <div class="card">
+        ${imageHtml}
+        <div class="card-body">
+          <div class="d-flex justify-content-between align-items-start mb-1">
+            <small class="text-fb-muted">${categoryLabel}</small>
+            ${stockBadge}
+          </div>
+          <h6 class="card-title">${product.name}</h6>
+          <p class="card-text text-fb-muted small flex-grow-1">${product.description || ''}</p>
+          <div class="d-flex justify-content-between align-items-center mb-2">
+            <span class="product-price">${Number(product.price).toFixed(2)} <span class="product-unit">лв/${product.unit}</span></span>
+          </div>
+          <div class="product-action-row">
+            <div class="product-qty-stepper" data-id="${product.id}">
+              <button type="button" class="qty-step-btn qty-step-dec" aria-label="Намали">−</button>
+              <input type="number" class="qty-step-input" value="1" min="1" max="99" aria-label="Количество">
+              <button type="button" class="qty-step-btn qty-step-inc" aria-label="Увеличи">+</button>
             </div>
-            <h6 class="card-title mb-1">${product.name}</h6>
-            <p class="card-text text-muted small flex-grow-1">${product.description || ''}</p>
-            <div class="d-flex justify-content-between align-items-center mb-2">
-              <span class="product-price">${Number(product.price).toFixed(2)} <span class="product-unit">лв/${product.unit}</span></span>
-            </div>
-            <div class="product-action-row">
-              <div class="product-qty-stepper" data-id="${product.id}">
-                <button type="button" class="qty-step-btn qty-step-dec" aria-label="Намали">−</button>
-                <input type="number" class="qty-step-input" value="1" min="1" max="99" aria-label="Количество">
-                <button type="button" class="qty-step-btn qty-step-inc" aria-label="Увеличи">+</button>
-              </div>
-              <button class="btn btn-sm btn-outline-success add-to-cart-btn"
-                      data-product='${JSON.stringify({ id: product.id, name: product.name, price: product.price, unit: product.unit, image_path: product.image_path })}'
-                      ${!product.in_stock ? 'disabled' : ''}>
-                🛒 Добави
-              </button>
-            </div>
+            <button class="btn btn-success add-to-cart-btn"
+                    data-product='${JSON.stringify({ id: product.id, name: product.name, price: product.price, unit: product.unit, image_path: product.image_path })}'
+                    ${!product.in_stock ? 'disabled' : ''}>
+              🛒 Добави
+            </button>
           </div>
         </div>
       </div>
@@ -198,16 +251,14 @@ function renderProducts() {
 function showCartToast(productName, itemsCount) {
   const container = document.querySelector('#toastContainer');
   const toast = document.createElement('div');
-  toast.className = 'alert alert-success alert-dismissible shadow-sm mb-2 fade show';
-  toast.setAttribute('role', 'alert');
-  toast.innerHTML = `✅ „${productName}" е добавено в кошницата <a href="/cart.html" class="alert-link fw-bold">(${itemsCount} арт.)</a>`;
+  toast.className = 'fb-toast success';
+  toast.innerHTML = `✅ „${productName}" е добавено <a href="/cart.html" class="fw-semibold">(${itemsCount} арт.)</a>`;
 
   container.appendChild(toast);
 
   setTimeout(() => {
-    toast.classList.remove('show');
-    toast.addEventListener('transitionend', () => toast.remove());
-    // Fallback removal if transitionend doesn't fire
-    setTimeout(() => toast.remove(), 400);
+    toast.classList.add('removing');
+    toast.addEventListener('animationend', () => toast.remove());
+    setTimeout(() => toast.remove(), 500);
   }, 1800);
 }
