@@ -46,14 +46,7 @@ document.querySelector('#app').innerHTML = `
   </div>
 
   <!-- Toast container -->
-  <div class="toast-container position-fixed bottom-0 end-0 p-3">
-    <div id="cartToast" class="toast align-items-center text-bg-success border-0" role="alert">
-      <div class="d-flex">
-        <div class="toast-body" id="cartToastBody">Добавено в кошницата</div>
-        <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
-      </div>
-    </div>
-  </div>
+  <div id="toastContainer" class="position-fixed top-0 end-0 p-3" style="z-index: 1080;"></div>
 `;
 
 // ---- Event listeners ----
@@ -175,12 +168,20 @@ function renderProducts() {
   });
 }
 
-// ---- Toast helper ----
+// ---- Toast helper (no bootstrap JS dependency) ----
 function showCartToast(productName, itemsCount) {
-  const toastBody = document.querySelector('#cartToastBody');
-  toastBody.innerHTML = `✅ „${productName}" е добавено в кошницата &nbsp;<a href="/cart.html" class="text-white fw-bold">(${itemsCount} арт.)</a>`;
+  const container = document.querySelector('#toastContainer');
+  const toast = document.createElement('div');
+  toast.className = 'alert alert-success alert-dismissible shadow-sm mb-2 fade show';
+  toast.setAttribute('role', 'alert');
+  toast.innerHTML = `✅ „${productName}" е добавено в кошницата <a href="/cart.html" class="alert-link fw-bold">(${itemsCount} арт.)</a>`;
 
-  const toastEl = document.querySelector('#cartToast');
-  const toast = bootstrap.Toast.getOrCreateInstance(toastEl, { delay: 2500 });
-  toast.show();
+  container.appendChild(toast);
+
+  setTimeout(() => {
+    toast.classList.remove('show');
+    toast.addEventListener('transitionend', () => toast.remove());
+    // Fallback removal if transitionend doesn't fire
+    setTimeout(() => toast.remove(), 400);
+  }, 1800);
 }
