@@ -1,9 +1,378 @@
+/* ============================================================
+   FreshBox – Design System & Global Styles
+   ============================================================ */
+
+/* ---------- 1. Design Tokens ---------- */
+:root {
+  /* Brand palette */
+  --fb-green:        #198754;
+  --fb-green-dark:   #146c43;
+  --fb-green-light:  #d1e7dd;
+  --fb-green-accent: #25a768;
+  --fb-orange:       #fd7e14;
+  --fb-red:          #dc3545;
+
+  /* Neutral palette */
+  --fb-bg:           #f4f6f8;
+  --fb-surface:      #ffffff;
+  --fb-border:       #e2e6ea;
+  --fb-text:         #212529;
+  --fb-text-muted:   #6c757d;
+
+  /* Elevation */
+  --fb-shadow-sm:    0 1px 3px rgba(0,0,0,.08);
+  --fb-shadow:       0 2px 8px rgba(0,0,0,.08);
+  --fb-shadow-lg:    0 4px 16px rgba(0,0,0,.10);
+
+  /* Shape */
+  --fb-radius:       .5rem;
+  --fb-radius-lg:    .75rem;
+
+  /* Spacing */
+  --fb-gap:          1.5rem;
+
+  /* Typography */
+  --fb-font:         'Segoe UI', system-ui, -apple-system, sans-serif;
+}
+
+/* ---------- 2. Global Layout ---------- */
+*,
+*::before,
+*::after { box-sizing: border-box; }
+
 body {
   min-height: 100vh;
-  background-color: #f8f9fa;
+  margin: 0;
+  font-family: var(--fb-font);
+  color: var(--fb-text);
+  background: var(--fb-bg);
+  -webkit-font-smoothing: antialiased;
+}
+
+main.container {
+  max-width: 1140px;
+  padding-top: 2rem;
+  padding-bottom: 3rem;
+}
+
+/* Page headings */
+#app h1 {
+  font-weight: 700;
+  font-size: 1.75rem;
+  letter-spacing: -0.02em;
+  color: var(--fb-text);
+}
+
+/* ---------- 3. Navbar ---------- */
+.navbar.bg-success {
+  background: linear-gradient(135deg, var(--fb-green) 0%, var(--fb-green-dark) 100%) !important;
+  box-shadow: var(--fb-shadow);
+  padding-top: .65rem;
+  padding-bottom: .65rem;
 }
 
 .navbar-brand {
-  font-weight: 600;
-  font-size: 1.5rem;
+  font-weight: 700;
+  font-size: 1.35rem;
+  letter-spacing: -.02em;
 }
+
+.navbar-nav .nav-link {
+  font-weight: 500;
+  font-size: .9rem;
+  padding: .45rem .85rem !important;
+  border-radius: var(--fb-radius);
+  transition: background .2s, color .2s;
+}
+
+.navbar-nav .nav-link:hover {
+  background: rgba(255,255,255,.12);
+}
+
+.navbar-nav .nav-link.active {
+  background: rgba(255,255,255,.2);
+  font-weight: 600;
+}
+
+/* Logout button in navbar */
+#logoutBtn {
+  color: rgba(255,255,255,.85) !important;
+  text-decoration: none;
+  cursor: pointer;
+}
+#logoutBtn:hover {
+  background: rgba(255,255,255,.12);
+  color: #fff !important;
+}
+
+/* ---------- 4. Catalog Cards ---------- */
+#productGrid .card {
+  border: 1px solid var(--fb-border);
+  border-radius: var(--fb-radius-lg);
+  overflow: hidden;
+  transition: box-shadow .2s, transform .2s;
+  box-shadow: var(--fb-shadow-sm);
+}
+#productGrid .card:hover {
+  box-shadow: var(--fb-shadow-lg);
+  transform: translateY(-2px);
+}
+
+#productGrid .card-img-top,
+#productGrid .card > .bg-light {
+  height: 180px;
+  object-fit: cover;
+  background-color: #f0f2f5;
+}
+
+#productGrid .card-body {
+  padding: 1rem;
+}
+
+#productGrid .card-title {
+  font-weight: 600;
+  font-size: .95rem;
+  line-height: 1.3;
+  margin-bottom: .25rem;
+}
+
+#productGrid .card-text {
+  font-size: .82rem;
+  line-height: 1.45;
+}
+
+/* Price styling */
+#productGrid .text-success.fw-bold {
+  font-size: 1.05rem !important;
+  white-space: nowrap;
+}
+
+/* Add-to-cart button */
+#productGrid .add-to-cart-btn {
+  border-radius: var(--fb-radius);
+  font-weight: 600;
+  font-size: .8rem;
+  white-space: nowrap;
+  transition: all .2s;
+}
+#productGrid .add-to-cart-btn:hover:not(:disabled) {
+  background: var(--fb-green);
+  color: #fff;
+  border-color: var(--fb-green);
+}
+
+/* Catalog filter row */
+#searchInput,
+#categoryFilter {
+  border-radius: var(--fb-radius);
+  border: 1px solid var(--fb-border);
+  box-shadow: var(--fb-shadow-sm);
+  transition: border-color .2s, box-shadow .2s;
+}
+#searchInput:focus,
+#categoryFilter:focus {
+  border-color: var(--fb-green-accent);
+  box-shadow: 0 0 0 .2rem rgba(25,135,84,.15);
+}
+
+/* Badges */
+.badge.bg-success {
+  background-color: var(--fb-green) !important;
+  font-weight: 500;
+  font-size: .7rem;
+  letter-spacing: .02em;
+}
+.badge.bg-secondary {
+  font-weight: 500;
+  font-size: .7rem;
+}
+
+/* ---------- 5. Cart & Orders Tables ---------- */
+.table {
+  border-radius: var(--fb-radius-lg);
+  overflow: hidden;
+  border-collapse: separate;
+  border-spacing: 0;
+  box-shadow: var(--fb-shadow-sm);
+  background: var(--fb-surface);
+}
+
+.table thead th {
+  font-weight: 600;
+  font-size: .82rem;
+  text-transform: uppercase;
+  letter-spacing: .04em;
+  color: var(--fb-text-muted);
+  background: #f8f9fa;
+  border-bottom: 2px solid var(--fb-border);
+  padding: .75rem 1rem;
+}
+
+.table tbody td {
+  padding: .75rem 1rem;
+  border-bottom: 1px solid #f0f2f5;
+  vertical-align: middle;
+}
+
+.table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.table tbody tr:hover {
+  background-color: #f8faf9;
+}
+
+.table tfoot td {
+  padding: .85rem 1rem;
+  background: #f8f9fa;
+  border-top: 2px solid var(--fb-border);
+}
+
+/* Qty controls */
+.qty-dec,
+.qty-inc {
+  font-weight: 700;
+  padding: .2rem .55rem;
+  line-height: 1;
+}
+
+.qty-input {
+  font-weight: 600;
+}
+
+/* ---------- 6. Login Card ---------- */
+.card.shadow {
+  border: 1px solid var(--fb-border);
+  border-radius: var(--fb-radius-lg);
+  box-shadow: var(--fb-shadow) !important;
+}
+.card.shadow .card-body {
+  padding: 2rem;
+}
+.card.shadow .card-title {
+  font-weight: 700;
+  font-size: 1.4rem;
+}
+
+/* ---------- 7. Orders Accordion ---------- */
+.accordion-item {
+  border: 1px solid var(--fb-border);
+  border-radius: var(--fb-radius-lg) !important;
+  margin-bottom: .75rem;
+  overflow: hidden;
+  box-shadow: var(--fb-shadow-sm);
+}
+
+.accordion-button {
+  font-weight: 500;
+  padding: 1rem 1.25rem;
+  background: var(--fb-surface);
+}
+.accordion-button:not(.collapsed) {
+  background: var(--fb-green-light);
+  color: var(--fb-green-dark);
+  box-shadow: none;
+}
+.accordion-button::after {
+  margin-left: .75rem;
+}
+
+.accordion-body {
+  padding: 0;
+}
+.accordion-body .table {
+  box-shadow: none;
+  border-radius: 0;
+  margin-bottom: 0;
+}
+
+/* ---------- 8. Landing Hero ---------- */
+.display-4 {
+  font-weight: 800;
+  letter-spacing: -.03em;
+}
+
+/* ---------- 9. Admin Page ---------- */
+.alert-heading {
+  font-weight: 700;
+}
+
+/* ---------- 10. Buttons (global polish) ---------- */
+.btn-success {
+  background-color: var(--fb-green);
+  border-color: var(--fb-green);
+  font-weight: 600;
+  border-radius: var(--fb-radius);
+  transition: all .2s;
+}
+.btn-success:hover {
+  background-color: var(--fb-green-dark);
+  border-color: var(--fb-green-dark);
+  box-shadow: 0 2px 6px rgba(25,135,84,.3);
+}
+
+.btn-outline-success {
+  color: var(--fb-green);
+  border-color: var(--fb-green);
+  font-weight: 600;
+  border-radius: var(--fb-radius);
+}
+.btn-outline-success:hover {
+  background-color: var(--fb-green);
+  border-color: var(--fb-green);
+}
+
+.btn-outline-danger {
+  border-radius: var(--fb-radius);
+  font-weight: 600;
+}
+
+/* ---------- 11. Form Controls ---------- */
+.form-control,
+.form-select {
+  border-radius: var(--fb-radius);
+}
+
+.form-control:focus,
+.form-select:focus {
+  border-color: var(--fb-green-accent);
+  box-shadow: 0 0 0 .2rem rgba(25,135,84,.15);
+}
+
+/* ---------- 12. Alerts & Empty States ---------- */
+.alert {
+  border-radius: var(--fb-radius);
+  font-size: .9rem;
+}
+
+/* Toast notifications (custom, top-right) */
+#toastContainer .alert {
+  min-width: 280px;
+  max-width: 380px;
+  font-size: .88rem;
+  box-shadow: var(--fb-shadow-lg);
+  border: none;
+}
+
+/* ---------- 13. Misc ---------- */
+/* Card-based sections for admin / future dashboards */
+.card {
+  border: 1px solid var(--fb-border);
+  border-radius: var(--fb-radius-lg);
+}
+
+/* Smooth links */
+a {
+  transition: color .2s;
+}
+
+/* Spinner */
+.spinner-border.text-success {
+  color: var(--fb-green) !important;
+}
+
+/* Scrollbar (webkit) */
+::-webkit-scrollbar { width: 8px; height: 8px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: #ccc; border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: #aaa; }

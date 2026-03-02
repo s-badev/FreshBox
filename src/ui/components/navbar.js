@@ -45,7 +45,7 @@ export async function renderNavbar(activePage = '') {
             `).join('')}
             ${isLoggedIn ? `
               <li class="nav-item">
-                <button class="nav-link btn btn-link" id="logoutBtn" style="border: none;">Изход</button>
+                <button class="nav-link btn btn-link" id="logoutBtn">Изход</button>
               </li>
             ` : `
               <li class="nav-item">
