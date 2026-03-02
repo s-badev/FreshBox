@@ -1,12 +1,32 @@
 # FreshBox
 
-FreshBox е **мини e-commerce уеб приложение** (онлайн магазин), разработено като capstone проект за курса **Software Technologies with AI**.
+FreshBox е модерно, минималистично **multi-page e-commerce** уеб приложение за поръчка на хранителни продукти.  
+Изградено е с **Vanilla HTML/CSS/JavaScript + Bootstrap**, **Vite** и **Supabase** (DB + Auth + Storage).
 
-Проектът е създаден с фокус върху:
-- реална full-stack архитектура (frontend + backend)
-- сигурност (RLS, роли, политики)
-- ясни потребителски потоци (auth → каталог → кошница → поръчки)
-- modular структура и чисти commit-и
+Фокус:
+- реален backend (Supabase)
+- ясна архитектура (pages/services/components)
+- сигурност чрез **RLS политики**
+- реален checkout (orders + order_items)
+- admin role + guard
+- лесно надграждане (CRUD, upload, seed)
+
+---
+
+## Live Demo
+- Live URL: _(to be added after Netlify deploy)_
+
+## Sample Credentials (for testers)
+> Създай тези акаунти през приложението (login/register), за да имаш стабилни данни за проверка:
+
+**Demo user**
+- Email: `demo@freshbox.bg`
+- Password: `demo1234`
+
+**Admin**
+- Email: `admin@freshbox.bg`
+- Password: `admin12345`
+- Role: `admin` (set in `public.user_roles`)
 
 ---
 
@@ -14,98 +34,90 @@ FreshBox е **мини e-commerce уеб приложение** (онлайн м
 
 | Capability | Description |
 |---|---|
-| Multi-Page App (Vite) | Отделни HTML страници (не SPA), стабилна структура за курс изискванията |
-| Supabase Backend | PostgreSQL + Auth + Storage, без собствен backend сървър |
-| Security by Default | RLS включен на всички таблици + политики за user/admin достъп |
-| Roles & Admin | `user_roles` + helper `is_admin()` + admin-only операции |
-| Storage Images | Публичен bucket `product-images` за снимки на продукти |
-| Clean UX Foundation | Bootstrap-first UI + минимален custom CSS (polish по-късно) |
+| Supabase Backend | Postgres DB + Auth + Storage |
+| RLS Security | Server-side access control for users + orders + admin-only routes |
+| Multi-page App | Separate HTML pages (index, login, catalog, cart, orders, admin) |
+| Real Checkout | Creates `orders` + `order_items` from localStorage cart |
+| Storage Images | Product images served from Supabase Storage bucket `product-images` |
+| Modular Codebase | `src/pages`, `src/services`, `src/ui/components`, `src/styles` |
 
 ---
 
 ## Features
 
+### 🧭 Pages / Screens
+- ✅ `index.html` — landing page (“Начало”)
+- ✅ `login.html` — register / login (Supabase Auth)
+- ✅ `catalog.html` — продуктови карти, търсене, филтър по категория, “Добави”
+- ✅ `cart.html` — количка: qty controls (+/−/input), subtotal, “Изчисти”, “Поръчай”
+- ✅ `orders.html` — “Моите поръчки” + expand/collapse items
+- ✅ `admin.html` — admin guard + base admin page (to be extended)
+
 ### 🔐 Authentication
-- ✅ Регистрация (email + password) чрез Supabase Auth
-- ✅ Вход (email + password)
-- ✅ Изход (logout)
-- ✅ Navbar показва **Вход / Изход** според session
-- ✅ Redirect след успешен вход към `catalog.html`
+- ✅ Register / Login / Logout чрез Supabase Auth
+- ✅ Navbar адаптация (Вход/Изход + Admin при admin role)
+- ✅ Session-based access via `authService.getSession()`
 
-### 🛒 Catalog (Products)
-- ✅ Каталог страница (multi-page)
-- ⏳ Зареждане на продукти от Supabase (следва)
-- ⏳ Търсене + филтър по категории (следва)
-- ⏳ Снимки от Storage (следва)
+### 🛒 Cart
+- ✅ localStorage cart
+- ✅ add/remove/update qty
+- ✅ totals summary
+- ✅ empty state + CTA към каталога
 
-### 🧺 Cart
-- ✅ Кошница страница (multi-page)
-- ⏳ Add / remove / qty (следва)
-- ⏳ Checkout → създава `orders` + `order_items` (следва)
+### 🧾 Checkout / Orders
+- ✅ “Поръчай” създава:
+  - `orders` (user_id, status='new')
+  - `order_items` (order_id, product_id, quantity, unit_price snapshot)
+- ✅ След успешно създаване: clearCart + redirect към orders
 
-### 📦 Orders (My Orders)
-- ✅ Моите поръчки страница (multi-page)
-- ⏳ List на поръчки само за текущия user (следва)
-- ⏳ Филтър по статус (следва)
+### 👮 Admin
+- ✅ `user_roles` + admin role
+- ✅ server-side RLS policies
+- ✅ client-side admin guard (redirect/deny for non-admin)
+- ⏳ (Next) CRUD за продукти + upload images + view orders
 
-### 🧑‍💼 Admin Panel
-- ✅ Admin страница (multi-page)
-- ✅ Роли + RLS готови
-- ⏳ Admin CRUD за категории/продукти (следва)
-- ⏳ Upload image към Storage (следва)
+### 🗄️ Database (Supabase)
+Main tables:
+- `profiles` — user profile linked to `auth.users`
+- `categories` — product categories
+- `products` — catalog items (+ image info)
+- `orders` — user orders
+- `order_items` — order line items
+- `user_roles` — role mapping (`admin`)
+
+Migrations are stored locally in:
+- `supabase/migrations/*.sql`
+
+### 🖼️ Storage (Supabase)
+- Bucket: `product-images`
+- Used for product images in catalog cards
 
 ---
 
 ## Architecture Overview
 
-### Application Style
-FreshBox е **Vite multi-page** приложение с **Supabase** като backend-as-a-service.
-
-- **Frontend:** Vanilla JS + Bootstrap
-- **Backend:** Supabase (PostgreSQL + Auth + Storage)
-- **Security:** Row Level Security + policies + роли
-
-### Core Principles
-- **Modular services layer** (`src/services/*`) за работа със Supabase
-- **UI компоненти** (navbar/по-късно footer) в `src/ui/components`
-- **DB changes чрез migrations** (`supabase/migrations/*.sql`)
-- **RLS по подразбиране** (никакви “UNRESTRICTED” таблици в production)
-
----
-
-## Architecture Diagram
-
 ```text
 ┌──────────────────────────────────────────────────────────────┐
-│                       BROWSER (CLIENT)                       │
+│                         CLIENT (Vite)                        │
 ├──────────────────────────────────────────────────────────────┤
 │  index.html   login.html   catalog.html   cart.html          │
 │  orders.html  admin.html                                       │
-│  (each page loads its own /src/pages/*.js entry)              │
 └──────────────────────────────────────────────────────────────┘
-                              │
-                              ▼
+                │
+                ▼
 ┌──────────────────────────────────────────────────────────────┐
-│                     JAVASCRIPT APPLICATION LAYER             │
+│                JS LAYER (modules / services)                 │
 ├──────────────────────────────────────────────────────────────┤
-│  src/pages/*                                                  │
-│  • page rendering + events                                   │
-│                                                              │
-│  src/ui/components/navbar.js                                 │
-│  • shared nav + session-aware actions                        │
-│                                                              │
-│  src/services/supabaseClient.js                              │
-│  • createClient(import.meta.env.*)                           │
-│                                                              │
-│  src/services/authService.js                                 │
-│  • signUp / signIn / signOut / getSession / onAuthStateChange │
+│  src/pages/*        → per-page logic (render + events)       │
+│  src/services/*     → supabase calls + business logic        │
+│  src/ui/components  → shared UI parts (navbar)               │
+│  src/styles/app.css → design system + global styles          │
 └──────────────────────────────────────────────────────────────┘
-                              │
-                              ▼
+                │
+                ▼
 ┌──────────────────────────────────────────────────────────────┐
-│                          SUPABASE                             │
+│                     SUPABASE BACKEND                         │
 ├──────────────────────────────────────────────────────────────┤
-│  Auth (users, sessions)                                      │
-│  PostgreSQL (tables + RLS policies)                           │
-│  Storage bucket: product-images                              │
+│  Auth (JWT)  +  Postgres DB  +  Storage (bucket)             │
+│  RLS policies enforce per-user access                         │
 └──────────────────────────────────────────────────────────────┘
