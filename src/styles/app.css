@@ -1,378 +1,1221 @@
 /* ============================================================
-   FreshBox – Design System & Global Styles
+   FreshBox – Premium Design System v2
+   Production-grade Bulgarian e-grocery theme
    ============================================================ */
 
-/* ---------- 1. Design Tokens ---------- */
+/* ==========================================================
+   1. DESIGN TOKENS
+   ========================================================== */
 :root {
-  /* Brand palette */
-  --fb-green:        #198754;
-  --fb-green-dark:   #146c43;
-  --fb-green-light:  #d1e7dd;
-  --fb-green-accent: #25a768;
-  --fb-orange:       #fd7e14;
-  --fb-red:          #dc3545;
+  /* ── Brand Palette ── */
+  --fb-primary:          #0b8a5e;
+  --fb-primary-dark:     #06704b;
+  --fb-primary-darker:   #045038;
+  --fb-primary-light:    #e8f8f2;
+  --fb-primary-muted:    #b5e4d3;
+  --fb-primary-050:      rgba(11,138,94,.05);
+  --fb-primary-010:      rgba(11,138,94,.10);
+  --fb-primary-015:      rgba(11,138,94,.15);
 
-  /* Neutral palette */
-  --fb-bg:           #f4f6f8;
-  --fb-surface:      #ffffff;
-  --fb-border:       #e2e6ea;
-  --fb-text:         #212529;
-  --fb-text-muted:   #6c757d;
+  --fb-accent:           #f5a623;
+  --fb-accent-light:     #fef6e4;
 
-  /* Elevation */
-  --fb-shadow-sm:    0 1px 3px rgba(0,0,0,.08);
-  --fb-shadow:       0 2px 8px rgba(0,0,0,.08);
-  --fb-shadow-lg:    0 4px 16px rgba(0,0,0,.10);
+  --fb-success:          #16a34a;
+  --fb-success-light:    #dcfce7;
+  --fb-info:             #2563eb;
+  --fb-info-light:       #dbeafe;
+  --fb-warning:          #ea940a;
+  --fb-warning-light:    #fef3c7;
+  --fb-danger:           #dc2626;
+  --fb-danger-light:     #fee2e2;
 
-  /* Shape */
-  --fb-radius:       .5rem;
-  --fb-radius-lg:    .75rem;
+  /* ── Neutrals ── */
+  --fb-white:            #ffffff;
+  --fb-bg:               #f6f8fb;
+  --fb-bg-warm:          #f9fafb;
+  --fb-bg-subtle:        #eef2f7;
+  --fb-surface:          #ffffff;
+  --fb-surface-hover:    #fafcfe;
+  --fb-border:           #e0e6ed;
+  --fb-border-light:     #edf1f7;
+  --fb-border-focus:     var(--fb-primary);
+  --fb-text:             #111827;
+  --fb-text-secondary:   #4b5563;
+  --fb-text-muted:       #9ca3af;
+  --fb-text-on-primary:  #ffffff;
 
-  /* Spacing */
-  --fb-gap:          1.5rem;
+  /* ── Radii ── */
+  --fb-radius-xs:        0.25rem;
+  --fb-radius-sm:        0.375rem;
+  --fb-radius-md:        0.5rem;
+  --fb-radius-lg:        0.75rem;
+  --fb-radius-xl:        1rem;
+  --fb-radius-2xl:       1.25rem;
+  --fb-radius-pill:      50rem;
 
-  /* Typography */
-  --fb-font:         'Segoe UI', system-ui, -apple-system, sans-serif;
+  /* ── Shadows (layered for depth) ── */
+  --fb-shadow-xs:        0 1px 2px rgba(0,0,0,.04);
+  --fb-shadow-sm:        0 1px 3px rgba(0,0,0,.06), 0 1px 2px rgba(0,0,0,.04);
+  --fb-shadow-md:        0 4px 6px -1px rgba(0,0,0,.07), 0 2px 4px -2px rgba(0,0,0,.05);
+  --fb-shadow-lg:        0 10px 15px -3px rgba(0,0,0,.08), 0 4px 6px -4px rgba(0,0,0,.05);
+  --fb-shadow-xl:        0 20px 25px -5px rgba(0,0,0,.08), 0 8px 10px -6px rgba(0,0,0,.04);
+  --fb-shadow-glow:      0 0 0 3px rgba(11,138,94,.14);
+  --fb-shadow-card:      0 1px 3px rgba(0,0,0,.04), 0 4px 16px rgba(0,0,0,.04);
+  --fb-shadow-card-hover:0 8px 30px rgba(0,0,0,.10), 0 2px 8px rgba(0,0,0,.04);
+
+  /* ── Spacing ── */
+  --fb-sp-1:  0.25rem;
+  --fb-sp-2:  0.5rem;
+  --fb-sp-3:  0.75rem;
+  --fb-sp-4:  1rem;
+  --fb-sp-5:  1.25rem;
+  --fb-sp-6:  1.5rem;
+  --fb-sp-8:  2rem;
+  --fb-sp-10: 2.5rem;
+  --fb-sp-12: 3rem;
+  --fb-sp-16: 4rem;
+
+  /* ── Transitions ── */
+  --fb-ease:             cubic-bezier(.25,.46,.45,.94);
+  --fb-transition-fast:  150ms var(--fb-ease);
+  --fb-transition:       220ms var(--fb-ease);
+  --fb-transition-slow:  350ms var(--fb-ease);
+
+  /* ── Typography ── */
+  --fb-font:      'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans', sans-serif;
+  --fb-font-mono: ui-monospace, 'Cascadia Code', 'Segoe UI Mono', 'Liberation Mono', Menlo, monospace;
+  --fb-font-display: 'Inter', var(--fb-font);
+
+  /* ── Layout ── */
+  --fb-content-max: 1200px;
+  --fb-navbar-h:    60px;
 }
 
-/* ---------- 2. Global Layout ---------- */
+/* ==========================================================
+   2. BOOTSTRAP OVERRIDES
+   ========================================================== */
+:root {
+  --bs-primary:          var(--fb-primary);
+  --bs-primary-rgb:      11, 138, 94;
+  --bs-success:          var(--fb-success);
+  --bs-success-rgb:      22, 163, 74;
+  --bs-danger:           var(--fb-danger);
+  --bs-danger-rgb:       220, 38, 38;
+  --bs-warning:          var(--fb-warning);
+  --bs-warning-rgb:      234, 148, 10;
+  --bs-info:             var(--fb-info);
+  --bs-info-rgb:         37, 99, 235;
+  --bs-body-bg:          var(--fb-bg);
+  --bs-body-color:       var(--fb-text);
+  --bs-border-color:     var(--fb-border);
+  --bs-link-color:       var(--fb-primary);
+  --bs-link-hover-color: var(--fb-primary-dark);
+  --bs-font-sans-serif:  var(--fb-font);
+}
+
+/* ==========================================================
+   3. BASE / GLOBAL
+   ========================================================== */
+
 *,
 *::before,
 *::after { box-sizing: border-box; }
+
+html {
+  -webkit-text-size-adjust: 100%;
+  -webkit-font-smoothing:  antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  scroll-behavior: smooth;
+  font-size: 16px;
+}
 
 body {
   min-height: 100vh;
   margin: 0;
   font-family: var(--fb-font);
+  font-size: 0.9375rem;
+  line-height: 1.65;
   color: var(--fb-text);
-  background: var(--fb-bg);
-  -webkit-font-smoothing: antialiased;
+  background-color: var(--fb-bg);
+  background-image:
+    radial-gradient(ellipse 80% 60% at 50% -10%, rgba(11,138,94,.06) 0%, transparent 60%),
+    radial-gradient(ellipse 60% 50% at 85% 20%, rgba(37,99,235,.03) 0%, transparent 50%),
+    linear-gradient(180deg, #f0f5f2 0%, var(--fb-bg) 300px);
+  background-attachment: fixed;
 }
 
-main.container {
-  max-width: 1140px;
-  padding-top: 2rem;
-  padding-bottom: 3rem;
+/* Micro-pattern overlay for texture */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  opacity: 0.12;
+  background-image:
+    radial-gradient(circle, var(--fb-border) 0.6px, transparent 0.6px);
+  background-size: 20px 20px;
 }
 
-/* Page headings */
+::selection {
+  background: var(--fb-primary-muted);
+  color: var(--fb-primary-darker);
+}
+
+a {
+  color: var(--fb-primary);
+  text-decoration: none;
+  transition: color var(--fb-transition-fast);
+}
+a:hover {
+  color: var(--fb-primary-dark);
+}
+
+/* ==========================================================
+   4. TYPOGRAPHY
+   ========================================================== */
 #app h1 {
-  font-weight: 700;
-  font-size: 1.75rem;
-  letter-spacing: -0.02em;
+  font-family: var(--fb-font-display);
+  font-weight: 800;
+  font-size: clamp(1.55rem, 2.4vw, 1.85rem);
+  letter-spacing: -0.03em;
   color: var(--fb-text);
+  line-height: 1.2;
+  margin-bottom: var(--fb-sp-6);
+  position: relative;
+  padding-bottom: var(--fb-sp-3);
 }
 
-/* ---------- 3. Navbar ---------- */
+#app h1:not(.display-4)::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 44px;
+  height: 3.5px;
+  background: var(--fb-primary);
+  border-radius: 3px;
+}
+
+#app h2 {
+  font-weight: 700;
+  font-size: 1.35rem;
+  letter-spacing: -0.02em;
+  line-height: 1.25;
+}
+
+#app h3, #app h4 {
+  font-weight: 700;
+  letter-spacing: -0.015em;
+}
+
+#app h5, #app h6 {
+  font-weight: 600;
+}
+
+p, li {
+  color: var(--fb-text-secondary);
+}
+
+/* ==========================================================
+   5. LAYOUT
+   ========================================================== */
+main.container {
+  max-width: var(--fb-content-max);
+  padding: var(--fb-sp-10) var(--fb-sp-6) var(--fb-sp-16);
+}
+
+@media (max-width: 576px) {
+  main.container {
+    padding: var(--fb-sp-6) var(--fb-sp-4) var(--fb-sp-10);
+  }
+}
+
+/* ==========================================================
+   6. NAVBAR
+   ========================================================== */
 .navbar.bg-success {
-  background: linear-gradient(135deg, var(--fb-green) 0%, var(--fb-green-dark) 100%) !important;
-  box-shadow: var(--fb-shadow);
-  padding-top: .65rem;
-  padding-bottom: .65rem;
+  background: linear-gradient(
+    135deg,
+    #0b8a5e 0%,
+    #07714c 40%,
+    #055a3b 100%
+  ) !important;
+  box-shadow:
+    0 1px 0 rgba(255,255,255,.06) inset,
+    0 4px 20px rgba(0,0,0,.12);
+  padding: 0;
+  height: var(--fb-navbar-h);
+  position: sticky;
+  top: 0;
+  z-index: 1030;
+  border: none;
+  backdrop-filter: saturate(1.3) blur(2px);
+}
+
+.navbar.bg-success > .container-fluid {
+  max-width: var(--fb-content-max);
+  margin: 0 auto;
+  padding: 0 var(--fb-sp-6);
+  height: 100%;
 }
 
 .navbar-brand {
-  font-weight: 700;
+  font-weight: 800;
   font-size: 1.35rem;
-  letter-spacing: -.02em;
+  letter-spacing: -0.035em;
+  color: #fff !important;
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0;
+  transition: opacity var(--fb-transition-fast);
+}
+.navbar-brand:hover {
+  opacity: .88;
+}
+
+.navbar-nav {
+  gap: var(--fb-sp-1);
+  align-items: center;
 }
 
 .navbar-nav .nav-link {
   font-weight: 500;
-  font-size: .9rem;
-  padding: .45rem .85rem !important;
-  border-radius: var(--fb-radius);
-  transition: background .2s, color .2s;
+  font-size: 0.8125rem;
+  padding: 0.38rem 0.9rem !important;
+  border-radius: var(--fb-radius-pill);
+  color: rgba(255,255,255,.78) !important;
+  transition: all var(--fb-transition-fast);
+  white-space: nowrap;
+  letter-spacing: 0.005em;
+  position: relative;
 }
 
 .navbar-nav .nav-link:hover {
-  background: rgba(255,255,255,.12);
-}
-
-.navbar-nav .nav-link.active {
-  background: rgba(255,255,255,.2);
-  font-weight: 600;
-}
-
-/* Logout button in navbar */
-#logoutBtn {
-  color: rgba(255,255,255,.85) !important;
-  text-decoration: none;
-  cursor: pointer;
-}
-#logoutBtn:hover {
-  background: rgba(255,255,255,.12);
+  background: rgba(255,255,255,.11);
   color: #fff !important;
 }
 
-/* ---------- 4. Catalog Cards ---------- */
+.navbar-nav .nav-link.active {
+  background: rgba(255,255,255,.18);
+  color: #fff !important;
+  font-weight: 600;
+}
+
+#logoutBtn {
+  color: rgba(255,255,255,.74) !important;
+  text-decoration: none;
+  cursor: pointer;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  border: 1px solid rgba(255,255,255,.18) !important;
+  border-radius: var(--fb-radius-pill) !important;
+  padding: 0.32rem 0.85rem !important;
+  transition: all var(--fb-transition-fast);
+  background: transparent !important;
+  line-height: 1.4;
+}
+#logoutBtn:hover {
+  background: rgba(255,255,255,.1) !important;
+  border-color: rgba(255,255,255,.32) !important;
+  color: #fff !important;
+}
+
+@media (max-width: 991.98px) {
+  .navbar.bg-success {
+    height: auto;
+    padding: 0.5rem 0;
+  }
+  .navbar-nav {
+    padding: var(--fb-sp-3) 0 var(--fb-sp-2);
+    gap: var(--fb-sp-1);
+    align-items: stretch;
+  }
+  .navbar-nav .nav-link {
+    padding: 0.55rem 1rem !important;
+    border-radius: var(--fb-radius-md);
+  }
+  #logoutBtn {
+    margin-top: var(--fb-sp-2);
+    text-align: center;
+    display: block;
+    width: 100%;
+  }
+}
+
+/* ==========================================================
+   7. BUTTONS
+   ========================================================== */
+.btn-success,
+.btn-primary {
+  --bs-btn-bg:             var(--fb-primary);
+  --bs-btn-border-color:   var(--fb-primary);
+  --bs-btn-hover-bg:       var(--fb-primary-dark);
+  --bs-btn-hover-border-color: var(--fb-primary-dark);
+  --bs-btn-active-bg:      var(--fb-primary-darker);
+  --bs-btn-active-border-color: var(--fb-primary-darker);
+  background-color: var(--fb-primary);
+  border-color: var(--fb-primary);
+  color: #fff;
+  font-weight: 600;
+  border-radius: var(--fb-radius-pill);
+  padding: 0.5rem 1.4rem;
+  transition: all var(--fb-transition);
+  box-shadow: 0 1px 3px rgba(11,138,94,.18);
+  letter-spacing: 0.005em;
+}
+.btn-success:hover,
+.btn-primary:hover {
+  background-color: var(--fb-primary-dark);
+  border-color: var(--fb-primary-dark);
+  box-shadow: 0 4px 14px rgba(11,138,94,.22);
+  transform: translateY(-1px);
+}
+.btn-success:active,
+.btn-primary:active {
+  background-color: var(--fb-primary-darker) !important;
+  border-color: var(--fb-primary-darker) !important;
+  transform: translateY(0);
+  box-shadow: 0 1px 3px rgba(11,138,94,.15);
+}
+.btn-success:focus-visible,
+.btn-primary:focus-visible {
+  box-shadow: var(--fb-shadow-glow) !important;
+  outline: none;
+}
+
+.btn-outline-success,
+.btn-outline-primary {
+  color: var(--fb-primary);
+  border-color: var(--fb-primary);
+  font-weight: 600;
+  border-radius: var(--fb-radius-pill);
+  padding: 0.5rem 1.4rem;
+  transition: all var(--fb-transition);
+  background: transparent;
+}
+.btn-outline-success:hover,
+.btn-outline-primary:hover {
+  background-color: var(--fb-primary);
+  border-color: var(--fb-primary);
+  color: #fff;
+  box-shadow: 0 4px 14px rgba(11,138,94,.18);
+  transform: translateY(-1px);
+}
+.btn-outline-success:focus-visible,
+.btn-outline-primary:focus-visible {
+  box-shadow: var(--fb-shadow-glow) !important;
+  outline: none;
+}
+
+.btn-outline-danger {
+  border-radius: var(--fb-radius-pill);
+  font-weight: 600;
+  transition: all var(--fb-transition);
+}
+.btn-outline-danger:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 14px rgba(220,38,38,.18);
+}
+.btn-outline-danger:focus-visible {
+  box-shadow: 0 0 0 3px rgba(220,38,38,.14) !important;
+  outline: none;
+}
+
+.btn-outline-secondary {
+  border-radius: var(--fb-radius-md);
+  font-weight: 700;
+  transition: all var(--fb-transition-fast);
+}
+.btn-outline-secondary:focus-visible {
+  box-shadow: 0 0 0 3px rgba(108,117,125,.12) !important;
+  outline: none;
+}
+
+.btn-lg {
+  padding: 0.65rem 2.1rem;
+  font-size: 1.05rem;
+  border-radius: var(--fb-radius-pill);
+}
+.btn-sm {
+  padding: 0.3rem 0.85rem;
+  font-size: 0.78rem;
+  border-radius: var(--fb-radius-pill);
+}
+
+/* ==========================================================
+   8. FORM CONTROLS
+   ========================================================== */
+.form-control,
+.form-select {
+  border-radius: var(--fb-radius-md);
+  border: 1.5px solid var(--fb-border);
+  padding: 0.58rem 0.9rem;
+  font-size: 0.875rem;
+  color: var(--fb-text);
+  background-color: var(--fb-surface);
+  transition: border-color var(--fb-transition-fast), box-shadow var(--fb-transition-fast);
+}
+
+.form-control::placeholder {
+  color: var(--fb-text-muted);
+  font-weight: 400;
+}
+
+.form-control:focus,
+.form-select:focus {
+  border-color: var(--fb-primary);
+  box-shadow: var(--fb-shadow-glow);
+  outline: none;
+}
+
+.form-label {
+  font-weight: 600;
+  font-size: 0.82rem;
+  color: var(--fb-text-secondary);
+  margin-bottom: var(--fb-sp-1);
+  letter-spacing: 0.01em;
+}
+
+.input-group .form-control {
+  border-radius: 0;
+}
+.input-group > :first-child {
+  border-radius: var(--fb-radius-md) 0 0 var(--fb-radius-md);
+}
+.input-group > :last-child {
+  border-radius: 0 var(--fb-radius-md) var(--fb-radius-md) 0;
+}
+
+/* ==========================================================
+   9. CARDS
+   ========================================================== */
+.card {
+  border: 1px solid var(--fb-border);
+  border-radius: var(--fb-radius-xl);
+  background: var(--fb-surface);
+  box-shadow: var(--fb-shadow-card);
+  overflow: hidden;
+  transition: box-shadow var(--fb-transition), transform var(--fb-transition), border-color var(--fb-transition);
+}
+
+.card.shadow {
+  border: 1px solid var(--fb-border-light);
+  border-radius: var(--fb-radius-2xl) !important;
+  box-shadow: var(--fb-shadow-lg) !important;
+}
+.card.shadow .card-body {
+  padding: 2.5rem 2rem;
+}
+.card.shadow .card-title {
+  font-family: var(--fb-font-display);
+  font-weight: 800;
+  font-size: 1.5rem;
+  color: var(--fb-text);
+  letter-spacing: -0.02em;
+}
+
+/* ==========================================================
+   10. BADGES
+   ========================================================== */
+.badge {
+  font-weight: 600;
+  font-size: 0.68rem;
+  letter-spacing: 0.02em;
+  border-radius: var(--fb-radius-pill);
+  padding: 0.28em 0.68em;
+  text-transform: capitalize;
+}
+
+.badge.bg-success { background-color: var(--fb-success) !important; color: #fff; }
+.badge.bg-primary { background-color: var(--fb-info) !important; color: #fff; }
+.badge.bg-warning { background-color: var(--fb-warning) !important; color: #fff; }
+.badge.bg-danger  { background-color: var(--fb-danger) !important; color: #fff; }
+.badge.bg-secondary {
+  background-color: var(--fb-text-muted) !important;
+  color: #fff;
+  font-weight: 500;
+}
+
+/* ==========================================================
+   11. LANDING HERO
+   ========================================================== */
+.hero-section {
+  padding: var(--fb-sp-16) var(--fb-sp-6) var(--fb-sp-12);
+  position: relative;
+}
+
+.hero-section::before {
+  content: '';
+  position: absolute;
+  top: -60px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 560px;
+  height: 560px;
+  background: radial-gradient(
+    circle,
+    rgba(11,138,94,.08) 0%,
+    rgba(11,138,94,.03) 35%,
+    transparent 65%
+  );
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.hero-section > * {
+  position: relative;
+  z-index: 1;
+}
+
+.display-4 {
+  font-family: var(--fb-font-display);
+  font-weight: 900;
+  font-size: clamp(2rem, 5vw, 3rem);
+  letter-spacing: -0.04em;
+  line-height: 1.1;
+  color: var(--fb-text);
+  margin-bottom: var(--fb-sp-4);
+}
+
+.hero-section > .lead {
+  font-size: 1.15rem;
+  color: var(--fb-text-secondary);
+  font-weight: 400;
+  max-width: 540px;
+  margin-left: auto;
+  margin-right: auto;
+  line-height: 1.6;
+}
+
+.hero-section .list-unstyled {
+  background: var(--fb-surface);
+  border: 1px solid var(--fb-border);
+  border-radius: var(--fb-radius-xl);
+  padding: var(--fb-sp-6) var(--fb-sp-8);
+  box-shadow: var(--fb-shadow-md);
+  display: inline-block;
+  text-align: left;
+}
+
+.hero-section .list-unstyled li {
+  font-size: 1rem;
+  color: var(--fb-text-secondary);
+  line-height: 1.75;
+  padding: var(--fb-sp-1) 0;
+}
+
+.hero-section .btn-lg {
+  padding: 0.8rem 2.6rem;
+  font-size: 1.08rem;
+  font-weight: 700;
+  box-shadow: 0 4px 20px rgba(11,138,94,.22);
+  letter-spacing: 0.01em;
+}
+.hero-section .btn-lg:hover {
+  box-shadow: 0 8px 32px rgba(11,138,94,.3);
+  transform: translateY(-2px);
+}
+
+/* ==========================================================
+   12. CATALOG
+   ========================================================== */
+/* ── Filter bar surface ── */
+.catalog-filters,
+#app .row.g-3.mb-4:has(#searchInput) {
+  background: var(--fb-surface);
+  border: 1px solid var(--fb-border);
+  border-radius: var(--fb-radius-xl);
+  padding: var(--fb-sp-5) var(--fb-sp-6);
+  box-shadow: var(--fb-shadow-sm);
+  margin-bottom: var(--fb-sp-8) !important;
+}
+
+#searchInput,
+#categoryFilter {
+  border-radius: var(--fb-radius-md);
+  border: 1.5px solid var(--fb-border);
+  box-shadow: none;
+  transition: border-color var(--fb-transition-fast), box-shadow var(--fb-transition-fast);
+  font-size: 0.875rem;
+}
+#searchInput:focus,
+#categoryFilter:focus {
+  border-color: var(--fb-primary);
+  box-shadow: var(--fb-shadow-glow);
+}
+
+/* Product cards */
 #productGrid .card {
   border: 1px solid var(--fb-border);
-  border-radius: var(--fb-radius-lg);
+  border-radius: var(--fb-radius-xl);
   overflow: hidden;
-  transition: box-shadow .2s, transform .2s;
-  box-shadow: var(--fb-shadow-sm);
+  box-shadow: var(--fb-shadow-card);
+  transition:
+    box-shadow var(--fb-transition),
+    transform var(--fb-transition),
+    border-color var(--fb-transition);
 }
+
 #productGrid .card:hover {
-  box-shadow: var(--fb-shadow-lg);
-  transform: translateY(-2px);
+  box-shadow: var(--fb-shadow-card-hover);
+  transform: translateY(-5px);
+  border-color: var(--fb-primary-muted);
 }
 
 #productGrid .card-img-top,
 #productGrid .card > .bg-light {
-  height: 180px;
+  height: 200px;
   object-fit: cover;
-  background-color: #f0f2f5;
+  background-color: var(--fb-bg-subtle);
+  border-bottom: 1px solid var(--fb-border-light);
+}
+
+#productGrid .card > .bg-light {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--fb-text-muted);
+  font-size: 0.85rem;
 }
 
 #productGrid .card-body {
-  padding: 1rem;
+  padding: var(--fb-sp-4) var(--fb-sp-4) var(--fb-sp-5);
+  display: flex;
+  flex-direction: column;
+}
+
+#productGrid .card-body small.text-muted {
+  font-size: 0.68rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-weight: 700;
+  color: var(--fb-text-muted) !important;
 }
 
 #productGrid .card-title {
-  font-weight: 600;
-  font-size: .95rem;
-  line-height: 1.3;
-  margin-bottom: .25rem;
+  font-weight: 700;
+  font-size: 0.92rem;
+  line-height: 1.35;
+  margin-bottom: 0.2rem;
+  color: var(--fb-text);
 }
 
 #productGrid .card-text {
-  font-size: .82rem;
-  line-height: 1.45;
+  font-size: 0.78rem;
+  line-height: 1.5;
+  color: var(--fb-text-muted);
 }
 
-/* Price styling */
 #productGrid .text-success.fw-bold {
-  font-size: 1.05rem !important;
+  font-size: 1.15rem !important;
+  font-weight: 800 !important;
+  color: var(--fb-primary) !important;
   white-space: nowrap;
 }
 
-/* Add-to-cart button */
 #productGrid .add-to-cart-btn {
-  border-radius: var(--fb-radius);
+  border-radius: var(--fb-radius-pill);
   font-weight: 600;
-  font-size: .8rem;
+  font-size: 0.76rem;
+  padding: 0.35rem 0.9rem;
   white-space: nowrap;
-  transition: all .2s;
+  transition: all var(--fb-transition);
+  border-width: 1.5px;
 }
 #productGrid .add-to-cart-btn:hover:not(:disabled) {
-  background: var(--fb-green);
+  background: var(--fb-primary);
   color: #fff;
-  border-color: var(--fb-green);
+  border-color: var(--fb-primary);
+  transform: translateY(-1px);
+  box-shadow: 0 3px 12px rgba(11,138,94,.2);
+}
+#productGrid .add-to-cart-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
 }
 
-/* Catalog filter row */
-#searchInput,
-#categoryFilter {
-  border-radius: var(--fb-radius);
+#productGrid .text-muted.fs-5 {
+  font-size: 1.1rem !important;
+  color: var(--fb-text-muted) !important;
+}
+
+/* ==========================================================
+   13. CART
+   ========================================================== */
+#cartContent > .table-responsive,
+#cartContent:has(.table-responsive) {
+  background: var(--fb-surface);
   border: 1px solid var(--fb-border);
-  box-shadow: var(--fb-shadow-sm);
-  transition: border-color .2s, box-shadow .2s;
-}
-#searchInput:focus,
-#categoryFilter:focus {
-  border-color: var(--fb-green-accent);
-  box-shadow: 0 0 0 .2rem rgba(25,135,84,.15);
-}
-
-/* Badges */
-.badge.bg-success {
-  background-color: var(--fb-green) !important;
-  font-weight: 500;
-  font-size: .7rem;
-  letter-spacing: .02em;
-}
-.badge.bg-secondary {
-  font-weight: 500;
-  font-size: .7rem;
-}
-
-/* ---------- 5. Cart & Orders Tables ---------- */
-.table {
-  border-radius: var(--fb-radius-lg);
+  border-radius: var(--fb-radius-2xl);
+  box-shadow: var(--fb-shadow-md);
   overflow: hidden;
+}
+
+.table {
   border-collapse: separate;
   border-spacing: 0;
-  box-shadow: var(--fb-shadow-sm);
   background: var(--fb-surface);
+  margin-bottom: 0;
 }
 
 .table thead th {
-  font-weight: 600;
-  font-size: .82rem;
+  font-weight: 700;
+  font-size: 0.72rem;
   text-transform: uppercase;
-  letter-spacing: .04em;
+  letter-spacing: 0.06em;
   color: var(--fb-text-muted);
-  background: #f8f9fa;
+  background: var(--fb-bg-subtle);
   border-bottom: 2px solid var(--fb-border);
-  padding: .75rem 1rem;
+  padding: 0.82rem 1rem;
+  white-space: nowrap;
 }
 
 .table tbody td {
-  padding: .75rem 1rem;
-  border-bottom: 1px solid #f0f2f5;
+  padding: 0.82rem 1rem;
+  border-bottom: 1px solid var(--fb-border-light);
   vertical-align: middle;
+  color: var(--fb-text);
+  font-size: 0.875rem;
 }
 
 .table tbody tr:last-child td {
   border-bottom: none;
 }
 
+.table tbody tr {
+  transition: background-color var(--fb-transition-fast);
+}
 .table tbody tr:hover {
-  background-color: #f8faf9;
+  background-color: var(--fb-primary-050);
 }
 
 .table tfoot td {
-  padding: .85rem 1rem;
-  background: #f8f9fa;
+  padding: 1rem;
+  background: var(--fb-bg-subtle);
   border-top: 2px solid var(--fb-border);
+  font-size: 0.95rem;
 }
 
-/* Qty controls */
 .qty-dec,
 .qty-inc {
   font-weight: 700;
-  padding: .2rem .55rem;
+  font-size: 0.9rem;
+  padding: 0.25rem 0.6rem;
   line-height: 1;
+  border-color: var(--fb-border);
+}
+.qty-dec:hover,
+.qty-inc:hover {
+  background: var(--fb-primary-light);
+  border-color: var(--fb-primary-muted);
+  color: var(--fb-primary);
 }
 
-.qty-input {
-  font-weight: 600;
-}
-
-/* ---------- 6. Login Card ---------- */
-.card.shadow {
-  border: 1px solid var(--fb-border);
-  border-radius: var(--fb-radius-lg);
-  box-shadow: var(--fb-shadow) !important;
-}
-.card.shadow .card-body {
-  padding: 2rem;
-}
-.card.shadow .card-title {
+.qty-input[type="number"] {
   font-weight: 700;
-  font-size: 1.4rem;
+  font-size: 0.85rem;
+  text-align: center;
 }
 
-/* ---------- 7. Orders Accordion ---------- */
+.qty-input[type="number"]::-webkit-inner-spin-button,
+.qty-input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  appearance: none;
+  margin: 0;
+}
+.qty-input[type="number"] {
+  -moz-appearance: textfield;
+  appearance: textfield;
+}
+
+.remove-btn {
+  width: 32px;
+  height: 32px;
+  padding: 0 !important;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.82rem;
+  border-radius: var(--fb-radius-pill) !important;
+  transition: all var(--fb-transition-fast);
+}
+.remove-btn:hover {
+  background-color: var(--fb-danger) !important;
+  border-color: var(--fb-danger) !important;
+  color: #fff !important;
+}
+
+#clearCartBtn {
+  border-radius: var(--fb-radius-pill);
+  font-size: 0.8rem;
+}
+
+#checkoutBtn {
+  font-size: 1rem;
+  padding: 0.6rem 2.2rem;
+  font-weight: 700;
+  border-radius: var(--fb-radius-pill);
+  box-shadow: 0 4px 18px rgba(11,138,94,.2);
+  letter-spacing: 0.01em;
+}
+#checkoutBtn:hover {
+  box-shadow: 0 6px 28px rgba(11,138,94,.28);
+}
+
+#cartContent > .text-center {
+  background: var(--fb-surface);
+  border: 1px solid var(--fb-border);
+  border-radius: var(--fb-radius-2xl);
+  box-shadow: var(--fb-shadow-sm);
+  padding: var(--fb-sp-16) var(--fb-sp-6);
+}
+
+#cartContent > .text-center .fs-5 {
+  font-size: 1.15rem !important;
+  color: var(--fb-text-secondary) !important;
+  font-weight: 500;
+}
+
+/* ==========================================================
+   14. ORDERS ACCORDION
+   ========================================================== */
+.accordion {
+  --bs-accordion-border-color: var(--fb-border);
+  --bs-accordion-border-radius: var(--fb-radius-xl);
+  --bs-accordion-btn-padding-x: 1.25rem;
+  --bs-accordion-btn-padding-y: 1rem;
+}
+
 .accordion-item {
   border: 1px solid var(--fb-border);
-  border-radius: var(--fb-radius-lg) !important;
-  margin-bottom: .75rem;
+  border-radius: var(--fb-radius-xl) !important;
+  margin-bottom: var(--fb-sp-3);
   overflow: hidden;
   box-shadow: var(--fb-shadow-sm);
+  transition: box-shadow var(--fb-transition), border-color var(--fb-transition);
+}
+
+.accordion-item:has(.accordion-button:not(.collapsed)) {
+  box-shadow: var(--fb-shadow-md);
+  border-color: var(--fb-primary-muted);
 }
 
 .accordion-button {
   font-weight: 500;
+  font-size: 0.9rem;
   padding: 1rem 1.25rem;
   background: var(--fb-surface);
+  color: var(--fb-text);
+  transition: background var(--fb-transition-fast);
 }
+
 .accordion-button:not(.collapsed) {
-  background: var(--fb-green-light);
-  color: var(--fb-green-dark);
+  background: var(--fb-primary-light);
+  color: var(--fb-primary-darker);
   box-shadow: none;
+  font-weight: 600;
 }
+
+.accordion-button:focus {
+  box-shadow: none;
+  border-color: transparent;
+}
+
 .accordion-button::after {
-  margin-left: .75rem;
+  margin-left: var(--fb-sp-3);
+  flex-shrink: 0;
+  width: 1rem;
+  height: 1rem;
 }
 
 .accordion-body {
   padding: 0;
 }
+
 .accordion-body .table {
   box-shadow: none;
   border-radius: 0;
   margin-bottom: 0;
 }
 
-/* ---------- 8. Landing Hero ---------- */
-.display-4 {
-  font-weight: 800;
-  letter-spacing: -.03em;
+.accordion-button .badge {
+  font-size: 0.66rem;
+  padding: 0.28em 0.6em;
+  vertical-align: middle;
 }
 
-/* ---------- 9. Admin Page ---------- */
-.alert-heading {
-  font-weight: 700;
+.accordion-button .fw-bold.text-success {
+  color: var(--fb-primary) !important;
+  font-weight: 700 !important;
 }
 
-/* ---------- 10. Buttons (global polish) ---------- */
-.btn-success {
-  background-color: var(--fb-green);
-  border-color: var(--fb-green);
-  font-weight: 600;
-  border-radius: var(--fb-radius);
-  transition: all .2s;
-}
-.btn-success:hover {
-  background-color: var(--fb-green-dark);
-  border-color: var(--fb-green-dark);
-  box-shadow: 0 2px 6px rgba(25,135,84,.3);
-}
-
-.btn-outline-success {
-  color: var(--fb-green);
-  border-color: var(--fb-green);
-  font-weight: 600;
-  border-radius: var(--fb-radius);
-}
-.btn-outline-success:hover {
-  background-color: var(--fb-green);
-  border-color: var(--fb-green);
-}
-
-.btn-outline-danger {
-  border-radius: var(--fb-radius);
-  font-weight: 600;
-}
-
-/* ---------- 11. Form Controls ---------- */
-.form-control,
-.form-select {
-  border-radius: var(--fb-radius);
-}
-
-.form-control:focus,
-.form-select:focus {
-  border-color: var(--fb-green-accent);
-  box-shadow: 0 0 0 .2rem rgba(25,135,84,.15);
-}
-
-/* ---------- 12. Alerts & Empty States ---------- */
-.alert {
-  border-radius: var(--fb-radius);
-  font-size: .9rem;
-}
-
-/* Toast notifications (custom, top-right) */
-#toastContainer .alert {
-  min-width: 280px;
-  max-width: 380px;
-  font-size: .88rem;
-  box-shadow: var(--fb-shadow-lg);
-  border: none;
-}
-
-/* ---------- 13. Misc ---------- */
-/* Card-based sections for admin / future dashboards */
-.card {
+#ordersContent > .text-center {
+  background: var(--fb-surface);
   border: 1px solid var(--fb-border);
-  border-radius: var(--fb-radius-lg);
+  border-radius: var(--fb-radius-2xl);
+  box-shadow: var(--fb-shadow-sm);
+  padding: var(--fb-sp-16) var(--fb-sp-6);
 }
 
-/* Smooth links */
-a {
-  transition: color .2s;
+/* ==========================================================
+   15. LOGIN / AUTH
+   ========================================================== */
+.row.justify-content-center.mt-5 {
+  padding-top: var(--fb-sp-8);
 }
 
-/* Spinner */
+.row.justify-content-center .card.shadow {
+  position: relative;
+  overflow: visible;
+}
+
+.row.justify-content-center .card.shadow::before {
+  content: '';
+  position: absolute;
+  top: -70px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 360px;
+  height: 360px;
+  background: radial-gradient(
+    circle,
+    rgba(11,138,94,.06) 0%,
+    transparent 60%
+  );
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: -1;
+}
+
+.row.justify-content-center .d-grid .btn {
+  padding: 0.55rem 1.5rem;
+  font-size: 0.95rem;
+}
+
+#message .alert {
+  border-radius: var(--fb-radius-md);
+  font-size: 0.84rem;
+}
+
+/* ==========================================================
+   16. ADMIN
+   ========================================================== */
+#app .alert.alert-success,
+#app .alert.alert-info,
+#app .alert.alert-warning,
+#app .alert.alert-danger {
+  border-radius: var(--fb-radius-xl);
+  border: none;
+  padding: var(--fb-sp-4) var(--fb-sp-6);
+}
+
+#app .alert.alert-success {
+  background: var(--fb-success-light);
+  color: #15803d;
+  border-left: 4px solid var(--fb-success);
+}
+#app .alert.alert-info {
+  background: var(--fb-info-light);
+  color: #1e40af;
+  border-left: 4px solid var(--fb-info);
+}
+#app .alert.alert-warning {
+  background: var(--fb-warning-light);
+  color: #92400e;
+  border-left: 4px solid var(--fb-warning);
+}
+#app .alert.alert-danger {
+  background: var(--fb-danger-light);
+  color: #b91c1c;
+  border-left: 4px solid var(--fb-danger);
+}
+
+.alert-heading {
+  font-weight: 800;
+  font-size: 1.1rem;
+  margin-bottom: var(--fb-sp-2);
+}
+
+.alert.d-inline-block {
+  display: inline-block;
+  min-width: 340px;
+  max-width: 500px;
+  text-align: center;
+  box-shadow: var(--fb-shadow-lg);
+  padding: var(--fb-sp-8);
+  border-radius: var(--fb-radius-2xl) !important;
+}
+
+/* ==========================================================
+   17. TOASTS
+   ========================================================== */
+#toastContainer {
+  z-index: 1090 !important;
+  pointer-events: none;
+}
+#toastContainer > * {
+  pointer-events: auto;
+}
+
+#toastContainer .alert {
+  min-width: 300px;
+  max-width: 420px;
+  font-size: 0.84rem;
+  font-weight: 500;
+  box-shadow: var(--fb-shadow-xl);
+  border: none;
+  border-radius: var(--fb-radius-xl);
+  padding: var(--fb-sp-3) var(--fb-sp-4);
+  backdrop-filter: blur(12px);
+  animation: toastSlideIn var(--fb-transition-slow) both;
+}
+
+@keyframes toastSlideIn {
+  from {
+    opacity: 0;
+    transform: translateX(24px) scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0) scale(1);
+  }
+}
+
+#toastContainer .alert-success {
+  background: rgba(220,252,231,.92);
+  color: #15803d;
+  border-left: 4px solid var(--fb-success);
+}
+#toastContainer .alert-danger {
+  background: rgba(254,226,226,.92);
+  color: #b91c1c;
+  border-left: 4px solid var(--fb-danger);
+}
+
+@media (max-width: 576px) {
+  #toastContainer {
+    left: var(--fb-sp-3) !important;
+    right: var(--fb-sp-3) !important;
+    padding: var(--fb-sp-2) !important;
+  }
+  #toastContainer .alert {
+    min-width: auto;
+    max-width: 100%;
+  }
+}
+
+/* ==========================================================
+   18. SPINNER
+   ========================================================== */
 .spinner-border.text-success {
-  color: var(--fb-green) !important;
+  color: var(--fb-primary) !important;
+  width: 2.5rem;
+  height: 2.5rem;
+  border-width: 0.2em;
 }
 
-/* Scrollbar (webkit) */
-::-webkit-scrollbar { width: 8px; height: 8px; }
-::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: #ccc; border-radius: 4px; }
-::-webkit-scrollbar-thumb:hover { background: #aaa; }
+.spinner-border + p.text-muted,
+.spinner-border ~ p.text-muted {
+  color: var(--fb-text-muted) !important;
+  font-size: 0.86rem;
+  margin-top: var(--fb-sp-3);
+}
+
+/* ==========================================================
+   19. RESPONSIVE TABLE
+   ========================================================== */
+.table-responsive {
+  border-radius: var(--fb-radius-xl);
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+html, body {
+  overflow-x: hidden;
+}
+
+/* ==========================================================
+   20. ACCESSIBILITY
+   ========================================================== */
+*:focus-visible {
+  outline: 2px solid var(--fb-primary);
+  outline-offset: 2px;
+}
+
+.btn:focus-visible {
+  outline: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+  #productGrid .card:hover,
+  .btn:hover,
+  #productGrid .add-to-cart-btn:hover:not(:disabled),
+  .btn-outline-danger:hover,
+  .hero-section .btn-lg:hover {
+    transform: none;
+  }
+}
+
+/* ==========================================================
+   21. SCROLLBAR
+   ========================================================== */
+::-webkit-scrollbar {
+  width: 7px;
+  height: 7px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--fb-border);
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--fb-text-muted);
+}
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--fb-border) transparent;
+}
+
+/* ==========================================================
+   22. UTILITIES
+   ========================================================== */
+.fb-surface {
+  background: var(--fb-surface);
+  border: 1px solid var(--fb-border);
+  border-radius: var(--fb-radius-2xl);
+  box-shadow: var(--fb-shadow-md);
+  padding: var(--fb-sp-6);
+}
+
+.fb-divider {
+  border: none;
+  height: 1px;
+  background: var(--fb-border);
+  margin: var(--fb-sp-6) 0;
+}
+
+/* ==========================================================
+   23. PRINT
+   ========================================================== */
+@media print {
+  body::before { display: none; }
+  .navbar { display: none !important; }
+  main.container { padding-top: 0; }
+  .card, .accordion-item { box-shadow: none; border: 1px solid #ddd; }
+  #toastContainer { display: none !important; }
+}

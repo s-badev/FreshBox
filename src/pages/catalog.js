@@ -22,7 +22,7 @@ document.querySelector('#app').innerHTML = `
     <h1 class="mb-4">Каталог продукти</h1>
 
     <!-- Search + Filter row -->
-    <div class="row g-3 mb-4">
+    <div class="row g-3 mb-4 catalog-filters">
       <div class="col-md-6">
         <input type="text" id="searchInput" class="form-control"
                placeholder="Търси по име на продукт…">
