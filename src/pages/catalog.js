@@ -3,11 +3,16 @@ import { renderNavbar, setupNavbarHandlers, updateCartBadge } from '../ui/compon
 import { fetchCategories, fetchProducts, getProductImageUrl } from '../services/catalogService.js';
 import { addToCart, getTotals } from '../services/cartService.js';
 
+// ---- URL params ----
+const urlParams = new URLSearchParams(window.location.search);
+const initialQuery = urlParams.get('q') || '';
+const initialCategoryId = urlParams.get('category') ? Number(urlParams.get('category')) : null;
+
 // ---- State ----
 let allProducts = [];
 let allCategories = [];
-let selectedCategoryId = null;
-let searchQuery = '';
+let selectedCategoryId = initialCategoryId;
+let searchQuery = initialQuery.toLowerCase();
 
 // ---- Init ----
 (async () => {
@@ -16,7 +21,20 @@ let searchQuery = '';
   await loadCatalog();
 })();
 
-// ---- Render shell (loading state) ----
+// ---- Render shell (loading state with skeletons) ----
+function buildSkeletons(count = 8) {
+  return Array.from({ length: count }, () => `
+    <div class="skeleton-card">
+      <div class="skeleton-img"></div>
+      <div class="skeleton-body">
+        <div class="skeleton-line w-80"></div>
+        <div class="skeleton-line w-60"></div>
+        <div class="skeleton-line w-40 h-lg"></div>
+      </div>
+    </div>
+  `).join('');
+}
+
 document.querySelector('#app').innerHTML = `
   <h1 class="page-heading">Каталог продукти</h1>
 
@@ -39,22 +57,20 @@ document.querySelector('#app').innerHTML = `
       <!-- Filter bar -->
       <div class="catalog-filter-bar">
         <input type="text" id="searchInput" class="form-control"
-               placeholder="Търси по име на продукт…">
+               placeholder="Търси по име на продукт…" value="${initialQuery}">
         <select id="categoryFilter" class="form-select" style="max-width:220px;">
           <option value="">Всички категории</option>
         </select>
       </div>
 
+      <!-- Filter chips -->
+      <div id="filterChips" class="filter-chips-bar"></div>
+
       <div id="resultsCount" class="catalog-results-count"></div>
 
       <!-- Product grid -->
       <div id="productGrid" class="product-grid">
-        <div class="fb-loading">
-          <div class="spinner-border" role="status">
-            <span class="visually-hidden">Зареждане...</span>
-          </div>
-          <span>Зареждане на продукти...</span>
-        </div>
+        ${buildSkeletons(8)}
       </div>
     </div>
   </div>
@@ -89,6 +105,53 @@ function syncSidebarActive() {
   });
 }
 
+// ---- Render filter chips ----
+function renderFilterChips() {
+  const container = document.querySelector('#filterChips');
+  if (!container) return;
+
+  const chips = [];
+
+  if (selectedCategoryId) {
+    const cat = allCategories.find(c => c.id === selectedCategoryId);
+    if (cat) {
+      chips.push(`<span class="filter-chip">📂 ${cat.name} <button class="filter-chip-clear" data-clear="category" aria-label="Премахни">✕</button></span>`);
+    }
+  }
+
+  if (searchQuery) {
+    chips.push(`<span class="filter-chip">🔍 „${searchQuery}" <button class="filter-chip-clear" data-clear="search" aria-label="Премахни">✕</button></span>`);
+  }
+
+  if (chips.length > 0) {
+    chips.push(`<button class="filter-chips-clear-all" data-clear="all">Изчисти всички</button>`);
+  }
+
+  container.innerHTML = chips.join('');
+
+  // Chip clear handlers
+  container.querySelectorAll('.filter-chip-clear, .filter-chips-clear-all').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const what = btn.dataset.clear;
+      if (what === 'category' || what === 'all') {
+        selectedCategoryId = null;
+        document.querySelector('#categoryFilter').value = '';
+        syncSidebarActive();
+      }
+      if (what === 'search' || what === 'all') {
+        searchQuery = '';
+        document.querySelector('#searchInput').value = '';
+      }
+      // Clean URL params
+      const url = new URL(window.location);
+      url.searchParams.delete('q');
+      url.searchParams.delete('category');
+      window.history.replaceState({}, '', url);
+      renderProducts();
+    });
+  });
+}
+
 // ---- Load data ----
 async function loadCatalog() {
   try {
@@ -105,6 +168,11 @@ async function loadCatalog() {
       opt.textContent = cat.name;
       select.appendChild(opt);
     });
+
+    // Pre-select from URL param
+    if (selectedCategoryId) {
+      select.value = selectedCategoryId;
+    }
 
     // Populate sidebar categories
     const sidebar = document.querySelector('#sidebarCategories');
@@ -130,6 +198,7 @@ async function loadCatalog() {
       renderProducts();
     });
 
+    syncSidebarActive();
     renderProducts();
   } catch (error) {
     console.error('Catalog load error:', error);
@@ -146,6 +215,9 @@ async function loadCatalog() {
 // ---- Render filtered products ----
 function renderProducts() {
   const grid = document.querySelector('#productGrid');
+
+  // Update filter chips
+  renderFilterChips();
 
   // Apply filters
   let filtered = allProducts;
@@ -177,7 +249,7 @@ function renderProducts() {
   allCategories.forEach(c => { catMap[c.id] = c.name; });
 
   // Render cards
-  grid.innerHTML = filtered.map(product => {
+  grid.innerHTML = filtered.map((product, idx) => {
     const imageHtml = product.image_path
       ? `<img src="${getProductImageUrl(product.image_path)}" class="card-img-top" alt="${product.name}" onerror="this.onerror=null; this.parentElement.innerHTML='<div class=\\'product-img-placeholder\\'>📷</div>';">`
       : `<div class="product-img-placeholder">📷</div>`;
@@ -187,30 +259,43 @@ function renderProducts() {
       ? '<span class="badge bg-success">В наличност</span>'
       : '<span class="badge bg-secondary">Изчерпан</span>';
 
+    // Product badges: every 5th product is "Хит", low price items get "Ново"
+    let badgeHtml = '';
+    if ((idx + 1) % 5 === 0) {
+      badgeHtml = '<span class="product-badge product-badge-hit">🔥 Хит</span>';
+    } else if (product.price < 2) {
+      badgeHtml = '<span class="product-badge product-badge-new">Ново</span>';
+    }
+
     return `
-      <div class="card">
-        ${imageHtml}
-        <div class="card-body">
-          <div class="d-flex justify-content-between align-items-start mb-1">
-            <small class="text-fb-muted">${categoryLabel}</small>
-            ${stockBadge}
-          </div>
-          <h6 class="card-title">${product.name}</h6>
-          <p class="card-text text-fb-muted small flex-grow-1">${product.description || ''}</p>
-          <div class="d-flex justify-content-between align-items-center mb-2">
-            <span class="product-price">${Number(product.price).toFixed(2)} <span class="product-unit">лв/${product.unit}</span></span>
-          </div>
-          <div class="product-action-row">
-            <div class="product-qty-stepper" data-id="${product.id}">
-              <button type="button" class="qty-step-btn qty-step-dec" aria-label="Намали">−</button>
-              <input type="number" class="qty-step-input" value="1" min="1" max="99" aria-label="Количество">
-              <button type="button" class="qty-step-btn qty-step-inc" aria-label="Увеличи">+</button>
+      <div class="product-card-wrapper">
+        ${badgeHtml}
+        <div class="card">
+          ${imageHtml}
+          <div class="card-body">
+            <div class="d-flex justify-content-between align-items-start mb-1">
+              <small class="text-fb-muted">${categoryLabel}</small>
+              ${stockBadge}
             </div>
-            <button class="btn btn-success add-to-cart-btn"
-                    data-product='${JSON.stringify({ id: product.id, name: product.name, price: product.price, unit: product.unit, image_path: product.image_path })}'
-                    ${!product.in_stock ? 'disabled' : ''}>
-              🛒 Добави
-            </button>
+            <h6 class="card-title">${product.name}</h6>
+            <p class="card-text text-fb-muted small">${product.description || ''}</p>
+            <div class="fb-card-actions">
+              <div class="d-flex justify-content-between align-items-center mb-2">
+                <span class="product-price">${Number(product.price).toFixed(2)} <span class="product-unit">лв/${product.unit}</span></span>
+              </div>
+              <div class="product-action-row">
+                <div class="product-qty-stepper" data-id="${product.id}">
+                  <button type="button" class="qty-step-btn qty-step-dec" aria-label="Намали">−</button>
+                  <input type="number" class="qty-step-input" value="1" min="1" max="99" aria-label="Количество">
+                  <button type="button" class="qty-step-btn qty-step-inc" aria-label="Увеличи">+</button>
+                </div>
+                <button class="btn btn-success add-to-cart-btn"
+                        data-product='${JSON.stringify({ id: product.id, name: product.name, price: product.price, unit: product.unit, image_path: product.image_path })}'
+                        ${!product.in_stock ? 'disabled' : ''}>
+                  🛒 Добави
+                </button>
+              </div>
+            </div>
           </div>
         </div>
       </div>

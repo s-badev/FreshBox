@@ -30,41 +30,52 @@ export async function renderNavbar(activePage = '') {
     navItems.push({ href: '/admin.html', label: 'Админ', page: 'admin' });
   }
 
+  const cartCount = getTotals().itemsCount || '';
+
   return `
-    <nav class="freshbox-nav navbar navbar-expand-lg">
-      <div class="container">
-        <a class="navbar-brand" href="/index.html">🥬 FreshBox</a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-          <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarNav">
-          <ul class="navbar-nav ms-auto">
-            ${navItems.map(item => {
-              const isCart = item.page === 'cart';
-              const badge = isCart ? `<span class="nav-cart-badge" id="cartBadge">${getTotals().itemsCount || ''}</span>` : '';
-              return `
-              <li class="nav-item">
-                <a class="nav-link ${activePage === item.page ? 'active' : ''}" href="${item.href}">${item.label}${badge}</a>
-              </li>
-            `;}).join('')}
-            ${isLoggedIn ? `
-              <li class="nav-item">
-                <button class="nav-link btn btn-link nav-logout-btn" id="logoutBtn">Изход</button>
-              </li>
-            ` : `
-              <li class="nav-item">
-                <a class="nav-link ${activePage === 'login' ? 'active' : ''}" href="/login.html">Вход</a>
-              </li>
-            `}
-          </ul>
+    <header class="fb-header">
+      <!-- Row 1: Logo + Search + Icons -->
+      <div class="fb-header-row1">
+        <a class="fb-header-brand" href="/index.html">🥬 FreshBox</a>
+
+        <div class="fb-header-search">
+          <input type="text" id="headerSearchInput" placeholder="Търси продукти..." aria-label="Търсене">
+          <button type="button" class="fb-header-search-btn" id="headerSearchBtn" aria-label="Търси">🔍</button>
+        </div>
+
+        <div class="fb-header-icons">
+          ${isLoggedIn ? `
+            <a href="/orders.html" class="fb-header-icon-btn" title="Моите поръчки">📋</a>
+          ` : ''}
+          <a href="/cart.html" class="fb-header-icon-btn" title="Кошница">
+            🛒<span class="fb-header-cart-count" id="cartBadge">${cartCount}</span>
+          </a>
+          ${!isLoggedIn ? `
+            <a href="/login.html" class="fb-header-icon-btn" title="Вход">👤</a>
+          ` : ''}
         </div>
       </div>
-    </nav>
+
+      <!-- Row 2: Navigation links -->
+      <div class="fb-header-row2">
+        <nav class="fb-header-row2-inner">
+          ${navItems.map(item =>
+            `<a class="fb-header-nav-link ${activePage === item.page ? 'active' : ''}" href="${item.href}">${item.label}</a>`
+          ).join('')}
+          ${isLoggedIn ? `
+            <button class="fb-header-logout-btn" id="logoutBtn">Изход</button>
+          ` : `
+            <a class="fb-header-nav-link ${activePage === 'login' ? 'active' : ''}" href="/login.html">Вход</a>
+          `}
+        </nav>
+      </div>
+    </header>
   `;
 }
 
-// Setup logout handler after navbar is rendered
+// Setup logout + search handler after navbar is rendered
 export function setupNavbarHandlers() {
+  // Logout
   const logoutBtn = document.querySelector('#logoutBtn');
   if (logoutBtn) {
     logoutBtn.addEventListener('click', async () => {
@@ -75,6 +86,33 @@ export function setupNavbarHandlers() {
         console.error('Logout error:', error);
         alert('Грешка при изход: ' + error.message);
       }
+    });
+  }
+
+  // Header search
+  const searchInput = document.querySelector('#headerSearchInput');
+  const searchBtn = document.querySelector('#headerSearchBtn');
+
+  if (searchInput && searchBtn) {
+    const doSearch = () => {
+      const q = searchInput.value.trim();
+      if (!q) return;
+
+      // If we're on catalog page, update the filter directly
+      const catalogSearchInput = document.querySelector('#searchInput');
+      if (catalogSearchInput) {
+        catalogSearchInput.value = q;
+        catalogSearchInput.dispatchEvent(new Event('input', { bubbles: true }));
+        searchInput.value = '';
+      } else {
+        // Navigate to catalog with query param
+        window.location.href = `/catalog.html?q=${encodeURIComponent(q)}`;
+      }
+    };
+
+    searchBtn.addEventListener('click', doSearch);
+    searchInput.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') { e.preventDefault(); doSearch(); }
     });
   }
 }
