@@ -73,10 +73,10 @@ The database consists of six tables with relationships managed through foreign k
 
 ```mermaid
 erDiagram
-    auth_users ||--o| profiles : "has"
-    auth_users ||--o| user_roles : "has"
+    auth_users ||--|| profiles : "has"
+    profiles ||--o{ user_roles : "has"
     categories ||--o{ products : "contains"
-    auth_users ||--o{ orders : "places"
+    profiles ||--o{ orders : "places"
     orders ||--o{ order_items : "has"
     products ||--o{ order_items : "referenced in"
 
@@ -184,7 +184,15 @@ All tables implement Row Level Security (RLS) with policies ensuring:
 
 ### Database Schema Diagram
 
-![Database Schema](docs/db-schema.png)
+```mermaid
+erDiagram
+    auth_users ||--|| profiles : "1:1"
+    profiles ||--o{ user_roles : "1:N"
+    categories ||--o{ products : "1:N"
+    profiles ||--o{ orders : "1:N"
+    orders ||--o{ order_items : "1:N"
+    products ||--o{ order_items : "1:N"
+```
 
 ## 🚀 Local Development Setup Guide
 
