@@ -19,14 +19,7 @@ document.querySelector('#app').innerHTML = `
   </div>
 
   <!-- Toast container -->
-  <div class="toast-container position-fixed bottom-0 end-0 p-3">
-    <div id="cartToast" class="toast align-items-center border-0" role="alert">
-      <div class="d-flex">
-        <div class="toast-body" id="cartToastBody"></div>
-        <button type="button" class="btn-close me-2 m-auto" data-bs-dismiss="toast"></button>
-      </div>
-    </div>
-  </div>
+  <div id="toastContainer" class="position-fixed top-0 end-0 p-3" style="z-index: 1080;"></div>
 `;
 
 // ---- Render cart ----
@@ -183,17 +176,21 @@ function renderCart() {
   });
 }
 
-// ---- Toast helper ----
+// ---- Toast helper (no bootstrap JS dependency) ----
 function showToast(text, isError = false) {
-  const toastEl = document.querySelector('#cartToast');
-  const toastBody = document.querySelector('#cartToastBody');
-  
-  toastEl.classList.remove('text-bg-success', 'text-bg-danger');
-  toastEl.classList.add(isError ? 'text-bg-danger' : 'text-bg-success');
-  toastBody.textContent = text;
+  const container = document.querySelector('#toastContainer');
+  const toast = document.createElement('div');
+  toast.className = `alert ${isError ? 'alert-danger' : 'alert-success'} shadow-sm mb-2 fade show`;
+  toast.setAttribute('role', 'alert');
+  toast.textContent = text;
 
-  const toast = bootstrap.Toast.getOrCreateInstance(toastEl, { delay: 2500 });
-  toast.show();
+  container.appendChild(toast);
+
+  setTimeout(() => {
+    toast.classList.remove('show');
+    toast.addEventListener('transitionend', () => toast.remove());
+    setTimeout(() => toast.remove(), 400);
+  }, 2500);
 }
 
 // ---- Initial render ----
