@@ -80,56 +80,62 @@ erDiagram
     orders ||--o{ order_items : "has"
     products ||--o{ order_items : "referenced in"
 
+    auth_users {
+        uuid id PK
+        string email
+        timestamp created_at
+    }
+
     profiles {
-        uuid id PK_FK
+        uuid id PK "FK auth_users.id"
         text full_name
         text phone
         text address
-        timestamptz created_at
+        timestamp created_at
     }
 
     user_roles {
         bigint id PK
         uuid user_id FK
-        text role
-        timestamptz created_at
+        string role
+        timestamp created_at
     }
 
     categories {
         bigint id PK
-        text name
+        string name
         text description
-        timestamptz created_at
+        timestamp created_at
     }
 
     products {
         bigint id PK
         bigint category_id FK
-        text name
+        string name
         text description
         numeric price
-        text unit
-        text image_path
+        string unit
+        string image_path
         boolean in_stock
-        timestamptz created_at
+        timestamp created_at
     }
 
     orders {
         bigint id PK
         uuid user_id FK
-        order_status status
+        string status
         numeric total_amount
         text note
-        timestamptz created_at
+        timestamp created_at
     }
 
     order_items {
         bigint id PK
         bigint order_id FK
         bigint product_id FK
-        integer quantity
+        int quantity
         numeric unit_price
-        timestamptz created_at
+        timestamp created_at
     }
 ```
 
