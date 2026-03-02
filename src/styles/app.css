@@ -1063,6 +1063,79 @@ small, .small { font-size: 0.8125rem; }
   border: 1px solid var(--fb-border-light);
 }
 
+/* Admin tabs */
+.admin-tabs {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 var(--fb-sp-1) 0;
+  display: flex;
+  gap: var(--fb-sp-1);
+  border-bottom: 2px solid var(--fb-border-light);
+}
+
+.admin-tabs li { margin: 0; }
+
+.admin-tab {
+  background: none;
+  border: none;
+  padding: 0.55rem 1.1rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--fb-text-muted);
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -2px;
+  transition: all var(--fb-transition-fast);
+}
+
+.admin-tab:hover {
+  color: var(--fb-primary);
+}
+
+.admin-tab.active {
+  color: var(--fb-primary-dark);
+  border-bottom-color: var(--fb-primary);
+}
+
+/* Admin dialog (custom, no Bootstrap Modal JS) */
+.admin-dialog-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 10000;
+  background: rgba(0, 0, 0, 0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--fb-sp-4);
+}
+
+.admin-dialog-backdrop[hidden] { display: none; }
+
+.admin-dialog {
+  background: var(--fb-surface);
+  border: 1px solid var(--fb-border-light);
+  border-radius: var(--fb-radius-2xl);
+  box-shadow: var(--fb-shadow-xl);
+  padding: var(--fb-sp-6);
+  width: 100%;
+  max-width: 480px;
+  max-height: 90vh;
+  overflow-y: auto;
+  animation: fbDialogIn 0.2s ease-out;
+}
+
+@keyframes fbDialogIn {
+  from { opacity: 0; transform: translateY(12px) scale(0.97); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.admin-dialog .form-label {
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--fb-gray-700);
+  margin-bottom: 0.2rem;
+}
+
 /* ==========================================================
    17. TOAST / ALERT SYSTEM
    ========================================================== */
