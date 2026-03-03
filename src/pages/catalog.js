@@ -258,9 +258,8 @@ function renderProducts() {
       : `<div class="product-img-placeholder">📷</div>`;
 
     const categoryLabel = catMap[product.category_id] || '';
-    const stockBadge = product.in_stock
-      ? '<span class="badge bg-success">В наличност</span>'
-      : '<span class="badge bg-secondary">Изчерпан</span>';
+    const stockClass = product.in_stock ? 'in-stock' : 'out-of-stock';
+    const stockText  = product.in_stock ? 'В наличност' : 'Изчерпан';
 
     // Product badges: every 5th product is "Хит", low price items get "Ново"
     let badgeHtml = '';
@@ -276,9 +275,9 @@ function renderProducts() {
         <div class="card">
           ${imageHtml}
           <div class="card-body">
-            <div class="d-flex justify-content-between align-items-start mb-1">
-              <small class="text-fb-muted">${categoryLabel}</small>
-              ${stockBadge}
+            <div class="fb-card-meta">
+              <span class="fb-card-category">${categoryLabel}</span>
+              <span class="fb-card-stock ${stockClass}">${stockText}</span>
             </div>
             <h6 class="card-title">${product.name}</h6>
             <p class="card-text text-fb-muted small">${product.description || ''}</p>
