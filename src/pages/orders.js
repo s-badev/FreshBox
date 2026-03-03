@@ -1,5 +1,6 @@
 import '../base.js';
 import { renderNavbar, setupNavbarHandlers } from '../ui/components/navbar.js';
+import { renderFooter } from '../ui/components/footer.js';
 import { getSession } from '../services/authService.js';
 import { fetchMyOrders } from '../services/orderService.js';
 
@@ -8,6 +9,9 @@ import { fetchMyOrders } from '../services/orderService.js';
   document.querySelector('#nav').innerHTML = await renderNavbar('orders');
   setupNavbarHandlers();
 })();
+
+// Render footer
+document.querySelector('#footer').innerHTML = renderFooter();
 
 // ---- Shell ----
 document.querySelector('#app').innerHTML = `

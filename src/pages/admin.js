@@ -1,5 +1,6 @@
 ﻿import '../base.js';
 import { renderNavbar, setupNavbarHandlers } from '../ui/components/navbar.js';
+import { renderFooter } from '../ui/components/footer.js';
 import { getSession } from '../services/authService.js';
 import { isAdmin } from '../services/roleService.js';
 import {
@@ -23,6 +24,7 @@ let productCategoryFilter = null;
 (async () => {
   document.querySelector('#nav').innerHTML = await renderNavbar('admin');
   setupNavbarHandlers();
+  document.querySelector('#footer').innerHTML = renderFooter();
 
   const appDiv = document.querySelector('#app');
 

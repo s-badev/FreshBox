@@ -1,5 +1,6 @@
 import '../base.js';
 import { renderNavbar, setupNavbarHandlers } from '../ui/components/navbar.js';
+import { renderFooter } from '../ui/components/footer.js';
 import { signUp, signIn } from '../services/authService.js';
 
 // Render navbar (async)
@@ -7,6 +8,9 @@ import { signUp, signIn } from '../services/authService.js';
   document.querySelector('#nav').innerHTML = await renderNavbar('login');
   setupNavbarHandlers();
 })();
+
+// Render footer
+document.querySelector('#footer').innerHTML = renderFooter();
 
 // Render page content
 document.querySelector('#app').innerHTML = `

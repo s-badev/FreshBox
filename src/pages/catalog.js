@@ -1,7 +1,9 @@
 import '../base.js';
 import { renderNavbar, setupNavbarHandlers, updateCartBadge } from '../ui/components/navbar.js';
+import { renderFooter } from '../ui/components/footer.js';
 import { fetchCategories, fetchProducts, getProductImageUrl } from '../services/catalogService.js';
 import { addToCart, getTotals } from '../services/cartService.js';
+import { openProductQuickView } from '../ui/components/productQuickView.js';
 
 // ---- URL params ----
 const urlParams = new URLSearchParams(window.location.search);
@@ -18,6 +20,7 @@ let searchQuery = initialQuery.toLowerCase();
 (async () => {
   document.querySelector('#nav').innerHTML = await renderNavbar('catalog');
   setupNavbarHandlers();
+  document.querySelector('#footer').innerHTML = renderFooter();
   await loadCatalog();
 })();
 
@@ -268,7 +271,7 @@ function renderProducts() {
     }
 
     return `
-      <div class="product-card-wrapper">
+      <div class="product-card-wrapper" data-product-id="${product.id}" style="cursor:pointer;">
         ${badgeHtml}
         <div class="card">
           ${imageHtml}
@@ -330,6 +333,32 @@ function renderProducts() {
       input.value = Math.max(1, Math.min(99, v));
     });
   });
+
+  // Attach Quick View: click on card (but NOT on stepper/add-to-cart buttons)
+  grid.querySelectorAll('.product-card-wrapper').forEach(wrapper => {
+    wrapper.addEventListener('click', (e) => {
+      // Ignore clicks on interactive elements inside the card
+      if (e.target.closest('button, input, .qty-step-btn, .qty-step-input, .add-to-cart-btn, .product-qty-stepper')) return;
+      const productId = Number(wrapper.dataset.productId);
+      const product = allProducts.find(p => p.id === productId);
+      if (!product) return;
+      openProductQuickView({
+        product,
+        allProducts,
+        categories: allCategories,
+        getImageUrl: getProductImageUrl,
+        onAddToCart: handleQuickViewAddToCart
+      });
+    });
+  });
+}
+
+/** Handle add-to-cart from Quick View modal */
+function handleQuickViewAddToCart(product, qty) {
+  addToCart(product, qty);
+  const { itemsCount } = getTotals();
+  showCartToast(product.name, itemsCount);
+  updateCartBadge();
 }
 
 // ---- Toast helper (no bootstrap JS dependency) ----

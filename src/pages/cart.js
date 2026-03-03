@@ -1,5 +1,6 @@
 import '../base.js';
 import { renderNavbar, setupNavbarHandlers, updateCartBadge } from '../ui/components/navbar.js';
+import { renderFooter } from '../ui/components/footer.js';
 import { getCart, updateQty, removeItem, clearCart, getTotals } from '../services/cartService.js';
 import { getProductImageUrl } from '../services/catalogService.js';
 import { getSession } from '../services/authService.js';
@@ -10,6 +11,9 @@ import { createOrderFromCart } from '../services/orderService.js';
   document.querySelector('#nav').innerHTML = await renderNavbar('cart');
   setupNavbarHandlers();
 })();
+
+// Render footer
+document.querySelector('#footer').innerHTML = renderFooter();
 
 // ---- Render shell ----
 document.querySelector('#app').innerHTML = `

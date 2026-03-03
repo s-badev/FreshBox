@@ -1,12 +1,18 @@
 import '../base.js';
-import { renderNavbar, setupNavbarHandlers } from '../ui/components/navbar.js';
+import { renderNavbar, setupNavbarHandlers, updateCartBadge } from '../ui/components/navbar.js';
+import { renderFooter } from '../ui/components/footer.js';
 import { fetchCategories, fetchProducts, getProductImageUrl } from '../services/catalogService.js';
+import { addToCart, getTotals } from '../services/cartService.js';
+import { openProductQuickView } from '../ui/components/productQuickView.js';
 
 // Render navbar (async)
 (async () => {
   document.querySelector('#nav').innerHTML = await renderNavbar('landing');
   setupNavbarHandlers();
 })();
+
+// Render footer
+document.querySelector('#footer').innerHTML = renderFooter();
 
 // Category emoji map (fallback for categories without custom icons)
 const categoryIcons = {
@@ -100,13 +106,13 @@ document.querySelector('#app').innerHTML = `
           : `<div class="product-img-placeholder">📷</div>`;
 
         return `
-          <a href="/catalog.html" class="card text-decoration-none">
+          <div class="card text-decoration-none" data-product-id="${product.id}" style="cursor:pointer;">
             ${imageHtml}
             <div class="card-body">
               <h6 class="card-title">${product.name}</h6>
               <span class="product-price">${Number(product.price).toFixed(2)} <span class="product-unit">лв/${product.unit}</span></span>
             </div>
-          </a>
+          </div>
         `;
       }).join('');
 
@@ -120,6 +126,27 @@ document.querySelector('#app').innerHTML = `
       ` : '';
 
       popularContainer.innerHTML = productCards + ctaTile;
+
+      // Attach Quick View click handlers on product cards
+      popularContainer.querySelectorAll('[data-product-id]').forEach(card => {
+        card.addEventListener('click', () => {
+          const productId = Number(card.dataset.productId);
+          const product = products.find(p => p.id === productId);
+          if (!product) return;
+          openProductQuickView({
+            product,
+            allProducts: products,
+            categories,
+            getImageUrl: getProductImageUrl,
+            onAddToCart: (prod, qty) => {
+              addToCart(prod, qty);
+              const { itemsCount } = getTotals();
+              showLandingToast(prod.name, itemsCount);
+              updateCartBadge();
+            }
+          });
+        });
+      });
     } else {
       popularContainer.innerHTML = `
         <a href="/catalog.html" class="popular-cta-tile">
@@ -133,3 +160,23 @@ document.querySelector('#app').innerHTML = `
     console.error('Landing load error:', error);
   }
 })();
+
+// ---- Toast helper (reuse pattern from catalog) ----
+function showLandingToast(productName, itemsCount) {
+  let container = document.querySelector('#toastContainer');
+  if (!container) {
+    container = document.createElement('div');
+    container.id = 'toastContainer';
+    container.className = 'fb-toast-container';
+    document.body.appendChild(container);
+  }
+  const toast = document.createElement('div');
+  toast.className = 'fb-toast success';
+  toast.innerHTML = `✅ „${productName}" е добавено <a href="/cart.html" class="fw-semibold">(${itemsCount} арт.)</a>`;
+  container.appendChild(toast);
+  setTimeout(() => {
+    toast.classList.add('removing');
+    toast.addEventListener('animationend', () => toast.remove());
+    setTimeout(() => toast.remove(), 500);
+  }, 1800);
+}
