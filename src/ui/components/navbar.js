@@ -37,8 +37,9 @@ export async function renderNavbar(activePage = '') {
         <nav class="fb-header-row2-inner">
           <a class="fb-header-nav-link ${activePage === 'landing' ? 'active' : ''}" href="/index.html">🏠 Начало</a>
           <a class="fb-header-nav-link ${activePage === 'catalog' ? 'active' : ''}" href="/catalog.html">📂 Каталог</a>
-          <a class="fb-header-nav-link ${activePage === 'cart' ? 'active' : ''}" href="/cart.html">🛒 Кошница<span class="fb-nav-cart-badge" id="cartBadge">${cartCount}</span></a>
           <a class="fb-header-nav-link ${activePage === 'orders' ? 'active' : ''}" href="/orders.html">📦 Моите поръчки</a>
+          <span class="fb-nav-spacer"></span>
+          <a class="fb-header-nav-link ${activePage === 'cart' ? 'active' : ''}" href="/cart.html">🛒 Кошница<span class="fb-nav-cart-badge" id="cartBadge">${cartCount}</span></a>
           ${userIsAdmin ? `
             <a class="fb-header-nav-link ${activePage === 'admin' ? 'active' : ''}" href="/admin.html">⚙️ Админ</a>
           ` : ''}

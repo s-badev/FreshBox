@@ -1864,6 +1864,11 @@ small, .small { font-size: 0.8125rem; }
   background: rgba(255,255,255,.08);
 }
 
+/* Spacer pushes right-side items (cart, admin, logout) to the far right */
+.fb-nav-spacer {
+  margin-left: auto;
+}
+
 .fb-header-nav-link.active {
   color: var(--fb-white);
   font-weight: 600;
@@ -1894,7 +1899,6 @@ small, .small { font-size: 0.8125rem; }
   cursor: pointer;
   text-decoration: none;
   transition: all var(--fb-transition-fast);
-  margin-left: auto;
 }
 .fb-header-logout-btn:hover {
   color: var(--fb-white);
@@ -2677,8 +2681,8 @@ small, .small { font-size: 0.8125rem; }
 
 /* ─── Bottom Bar ─── */
 .fb-footer-bottom {
-  background: var(--fb-gray-900);
-  border-top: 1px solid var(--fb-gray-800);
+  background: #0b1220;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
   padding: var(--fb-sp-4) 0;
 }
 .fb-bottom-inner {
@@ -2690,7 +2694,7 @@ small, .small { font-size: 0.8125rem; }
 }
 .fb-bottom-copy {
   font-size: 0.76rem;
-  color: var(--fb-gray-500);
+  color: rgba(255, 255, 255, 0.85);
 }
 .fb-bottom-legal {
   display: flex;
@@ -2699,16 +2703,17 @@ small, .small { font-size: 0.8125rem; }
   flex-wrap: wrap;
 }
 .fb-bottom-legal a {
-  color: var(--fb-gray-500);
+  color: rgba(255, 255, 255, 0.88);
   text-decoration: none;
   font-size: 0.76rem;
   transition: color var(--fb-transition-fast);
 }
 .fb-bottom-legal a:hover {
-  color: var(--fb-gray-300);
+  color: #fff;
+  text-decoration: underline;
 }
 .fb-bottom-sep {
-  color: var(--fb-gray-700);
+  color: rgba(255, 255, 255, 0.55);
   font-size: 0.7rem;
 }
 
