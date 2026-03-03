@@ -530,9 +530,21 @@ small, .small { font-size: 0.8125rem; }
 /* ---- Category tiles ---- */
 .category-tiles-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(155px, 1fr));
+  grid-template-columns: repeat(2, 1fr);
   gap: var(--fb-sp-4);
   margin-bottom: var(--fb-sp-10);
+}
+
+@media (min-width: 576px) {
+  .category-tiles-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (min-width: 992px) {
+  .category-tiles-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
 }
 
 .category-tile {
@@ -572,26 +584,55 @@ small, .small { font-size: 0.8125rem; }
 /* ---- Popular products section ---- */
 .popular-products-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  grid-template-columns: repeat(2, 1fr);
   gap: var(--fb-sp-4);
   margin-bottom: var(--fb-sp-6);
+  grid-auto-rows: 1fr;
+  align-items: stretch;
+}
+
+@media (min-width: 576px) {
+  .popular-products-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 768px) {
+  .popular-products-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (min-width: 992px) {
+  .popular-products-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
 }
 
 .popular-products-grid .card {
   display: flex;
   flex-direction: column;
+  height: 100%;
 }
 
 .popular-products-grid .card-img-top {
-  height: 160px;
+  height: 180px;
+  width: 100%;
   object-fit: cover;
   border-bottom: 1px solid var(--fb-border-light);
   background: var(--fb-gray-50);
   transition: transform 0.35s ease;
+  flex-shrink: 0;
 }
 
 .popular-products-grid .card:hover .card-img-top {
   transform: scale(1.04);
+}
+
+.popular-products-grid .product-img-placeholder {
+  height: 180px;
+  width: 100%;
+  flex-shrink: 0;
 }
 
 .popular-products-grid .card-body {
@@ -605,6 +646,59 @@ small, .small { font-size: 0.8125rem; }
   font-size: 0.9rem;
   font-weight: 600;
   margin-bottom: 0.2rem;
+  line-height: 1.35;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  min-height: calc(2 * 0.9rem * 1.35);
+}
+
+.popular-products-grid .product-price {
+  margin-top: auto;
+}
+
+/* CTA tile in popular products */
+.popular-cta-tile {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--fb-sp-3);
+  height: 100%;
+  background: var(--fb-primary-light);
+  border: 2px dashed var(--fb-primary-muted);
+  border-radius: var(--fb-radius-xl);
+  padding: var(--fb-sp-6) var(--fb-sp-4);
+  text-align: center;
+  transition: all var(--fb-transition-base);
+  text-decoration: none;
+  color: var(--fb-primary-dark);
+}
+
+.popular-cta-tile:hover {
+  background: var(--fb-primary-050);
+  border-color: var(--fb-primary);
+  transform: translateY(-3px);
+  box-shadow: var(--fb-shadow-md);
+  color: var(--fb-primary-dark);
+}
+
+.popular-cta-tile-icon {
+  font-size: 2.5rem;
+  line-height: 1;
+}
+
+.popular-cta-tile-title {
+  font-size: 1rem;
+  font-weight: 700;
+}
+
+.popular-cta-tile-subtitle {
+  font-size: 0.8125rem;
+  color: var(--fb-text-secondary);
 }
 
 .landing-view-all {
@@ -1490,7 +1584,6 @@ small, .small { font-size: 0.8125rem; }
   }
 
   .category-tiles-grid {
-    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
     gap: var(--fb-sp-3);
   }
 
@@ -1498,7 +1591,7 @@ small, .small { font-size: 0.8125rem; }
   .category-tile-icon { font-size: 1.75rem; }
 
   .popular-products-grid {
-    grid-template-columns: repeat(auto-fill, minmax(155px, 1fr));
+    gap: var(--fb-sp-3);
   }
 
   .auth-card {
@@ -1719,7 +1812,29 @@ small, .small { font-size: 0.8125rem; }
   text-decoration: none;
   transition: all var(--fb-transition-fast);
   position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
 }
+
+/* Cart badge inside nav link */
+.fb-nav-cart-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 18px;
+  height: 18px;
+  padding: 0 5px;
+  font-size: 0.625rem;
+  font-weight: 700;
+  line-height: 1;
+  color: var(--fb-primary-dark);
+  background: var(--fb-white);
+  border-radius: var(--fb-radius-pill);
+  margin-left: 4px;
+  box-shadow: 0 1px 3px rgba(0,0,0,.15);
+}
+.fb-nav-cart-badge:empty { display: none; }
 
 .fb-header-nav-link:hover {
   color: var(--fb-white);

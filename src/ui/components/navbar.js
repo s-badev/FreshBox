@@ -18,23 +18,11 @@ export async function renderNavbar(activePage = '') {
     console.error('Session check error:', error);
   }
 
-  const navItems = [
-    { href: '/index.html', label: 'Начало', page: 'landing' },
-    { href: '/catalog.html', label: 'Каталог', page: 'catalog' },
-    { href: '/cart.html', label: 'Кошница', page: 'cart' },
-    { href: '/orders.html', label: 'Моите поръчки', page: 'orders' }
-  ];
-  
-  // Add admin link only for admins
-  if (userIsAdmin) {
-    navItems.push({ href: '/admin.html', label: 'Админ', page: 'admin' });
-  }
-
   const cartCount = getTotals().itemsCount || '';
 
   return `
     <header class="fb-header">
-      <!-- Row 1: Logo + Search + Icons -->
+      <!-- Row 1: Logo + Search -->
       <div class="fb-header-row1">
         <a class="fb-header-brand" href="/index.html">🥬 FreshBox</a>
 
@@ -42,30 +30,22 @@ export async function renderNavbar(activePage = '') {
           <input type="text" id="headerSearchInput" placeholder="Търси продукти..." aria-label="Търсене">
           <button type="button" class="fb-header-search-btn" id="headerSearchBtn" aria-label="Търси">🔍</button>
         </div>
-
-        <div class="fb-header-icons">
-          ${isLoggedIn ? `
-            <a href="/orders.html" class="fb-header-icon-btn" title="Моите поръчки">📋</a>
-          ` : ''}
-          <a href="/cart.html" class="fb-header-icon-btn" title="Кошница">
-            🛒<span class="fb-header-cart-count" id="cartBadge">${cartCount}</span>
-          </a>
-          ${!isLoggedIn ? `
-            <a href="/login.html" class="fb-header-icon-btn" title="Вход">👤</a>
-          ` : ''}
-        </div>
       </div>
 
       <!-- Row 2: Navigation links -->
       <div class="fb-header-row2">
         <nav class="fb-header-row2-inner">
-          ${navItems.map(item =>
-            `<a class="fb-header-nav-link ${activePage === item.page ? 'active' : ''}" href="${item.href}">${item.label}</a>`
-          ).join('')}
+          <a class="fb-header-nav-link ${activePage === 'landing' ? 'active' : ''}" href="/index.html">🏠 Начало</a>
+          <a class="fb-header-nav-link ${activePage === 'catalog' ? 'active' : ''}" href="/catalog.html">📂 Каталог</a>
+          <a class="fb-header-nav-link ${activePage === 'cart' ? 'active' : ''}" href="/cart.html">🛒 Кошница<span class="fb-nav-cart-badge" id="cartBadge">${cartCount}</span></a>
+          <a class="fb-header-nav-link ${activePage === 'orders' ? 'active' : ''}" href="/orders.html">📦 Моите поръчки</a>
+          ${userIsAdmin ? `
+            <a class="fb-header-nav-link ${activePage === 'admin' ? 'active' : ''}" href="/admin.html">⚙️ Админ</a>
+          ` : ''}
           ${isLoggedIn ? `
             <button class="fb-header-logout-btn" id="logoutBtn">Изход</button>
           ` : `
-            <a class="fb-header-nav-link ${activePage === 'login' ? 'active' : ''}" href="/login.html">Вход</a>
+            <a class="fb-header-nav-link ${activePage === 'login' ? 'active' : ''}" href="/login.html">👤 Вход</a>
           `}
         </nav>
       </div>

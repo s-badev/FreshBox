@@ -89,12 +89,12 @@ document.querySelector('#app').innerHTML = `
       tilesContainer.innerHTML = '<p class="text-fb-muted">Няма налични категории</p>';
     }
 
-    // Render popular products (first 4 in-stock products)
+    // Render popular products (first 8 in-stock products)
     const popularContainer = document.querySelector('#popularProducts');
-    const popular = products.filter(p => p.in_stock).slice(0, 4);
+    const popular = products.filter(p => p.in_stock).slice(0, 8);
 
     if (popular.length > 0) {
-      popularContainer.innerHTML = popular.map(product => {
+      const productCards = popular.map(product => {
         const imageHtml = product.image_path
           ? `<img src="${getProductImageUrl(product.image_path)}" class="card-img-top" alt="${product.name}" onerror="this.onerror=null; this.parentElement.innerHTML='<div class=\\'product-img-placeholder\\'>📷</div>';">`
           : `<div class="product-img-placeholder">📷</div>`;
@@ -109,8 +109,25 @@ document.querySelector('#app').innerHTML = `
           </a>
         `;
       }).join('');
+
+      // Add CTA tile only if products don't fill full rows of 4
+      const ctaTile = (popular.length % 4 !== 0) ? `
+        <a href="/catalog.html" class="popular-cta-tile">
+          <span class="popular-cta-tile-icon">🛒</span>
+          <span class="popular-cta-tile-title">Виж всички продукти</span>
+          <span class="popular-cta-tile-subtitle">Разгледай целия каталог</span>
+        </a>
+      ` : '';
+
+      popularContainer.innerHTML = productCards + ctaTile;
     } else {
-      popularContainer.innerHTML = '<p class="text-fb-muted">Няма налични продукти</p>';
+      popularContainer.innerHTML = `
+        <a href="/catalog.html" class="popular-cta-tile">
+          <span class="popular-cta-tile-icon">🛒</span>
+          <span class="popular-cta-tile-title">Виж всички продукти</span>
+          <span class="popular-cta-tile-subtitle">Разгледай целия каталог</span>
+        </a>
+      `;
     }
   } catch (error) {
     console.error('Landing load error:', error);
