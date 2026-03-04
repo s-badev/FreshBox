@@ -2566,7 +2566,7 @@ small, .small { font-size: 0.8125rem; }
 
 /* ─── Layer 3 : Main Footer ─── */
 .fb-footer-main {
-  background: linear-gradient(135deg, var(--fb-primary-dark) 0%, var(--fb-primary) 60%, #10a06e 100%);
+  background: #135835;
   border-top: 1px solid rgba(255, 255, 255, 0.15);
   padding: var(--fb-sp-10) 0 var(--fb-sp-8);
   color: rgba(255, 255, 255, 0.78);
