@@ -81,8 +81,7 @@ const STATUS_MAP = {
                         data-bs-toggle="collapse" data-bs-target="#order-${order.id}">
                   <div class="d-flex w-100 justify-content-between align-items-center me-3">
                     <span>
-                      <strong>Поръчка #${order.id}</strong>
-                      <small class="text-fb-muted ms-2">${date}</small>
+                      <strong>Поръчка от ${date}</strong>
                     </span>
                     <span>
                       <span class="order-status-badge badge bg-${status.bg} me-2">${status.label}</span>
