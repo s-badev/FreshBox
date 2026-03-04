@@ -106,6 +106,10 @@
   --fb-tracking-tight: -0.015em;
   --fb-tracking-normal: 0;
   --fb-tracking-wide: 0.015em;
+
+  /* ---- Fixed header heights ---- */
+  --fb-header-h: 88px;
+  --fb-header-h-mobile: 110px;
 }
 
 /* ==========================================================
@@ -132,6 +136,7 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   min-height: 100vh;
+  padding-top: var(--fb-header-h);
 }
 
 img { max-width: 100%; height: auto; }
@@ -1687,8 +1692,10 @@ small, .small { font-size: 0.8125rem; }
    23. 2-ROW E-COMMERCE HEADER
    ========================================================== */
 .fb-header {
-  position: sticky;
+  position: fixed;
   top: 0;
+  left: 0;
+  right: 0;
   z-index: 1030;
   background: linear-gradient(135deg, var(--fb-primary-dark) 0%, var(--fb-primary) 60%, #10a06e 100%);
   box-shadow: 0 4px 24px rgba(0, 0, 0, 0.18), 0 1px 4px rgba(0, 0, 0, 0.10);
@@ -1881,7 +1888,7 @@ small, .small { font-size: 0.8125rem; }
 
 /* Mobile header responsive */
 @media (max-width: 767.98px) {
-  #nav { min-height: 110px; }
+  body { padding-top: var(--fb-header-h-mobile); }
   .fb-header-row1 { flex-wrap: wrap; gap: var(--fb-sp-2); }
   .fb-header-search { order: 3; max-width: none; flex-basis: 100%; }
   .fb-header-brand { font-size: 1.15rem; }
