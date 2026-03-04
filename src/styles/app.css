@@ -1557,22 +1557,32 @@ small, .small { font-size: 0.8125rem; }
 /* ==========================================================
    19. CUSTOM SCROLLBAR
    ========================================================== */
+
+/* Firefox */
+html {
+  scrollbar-width: thin;
+  scrollbar-color: var(--fb-primary-muted) transparent;
+}
+
+/* Chrome / Edge / Safari */
 ::-webkit-scrollbar {
-  width: 7px;
-  height: 7px;
+  width: 8px;
+  height: 8px;
 }
 
 ::-webkit-scrollbar-track {
-  background: transparent;
-}
-
-::-webkit-scrollbar-thumb {
-  background: var(--fb-gray-300);
+  background: var(--fb-gray-100);
   border-radius: 100px;
 }
 
+::-webkit-scrollbar-thumb {
+  background: var(--fb-primary-muted);
+  border-radius: 100px;
+  border: 2px solid var(--fb-gray-100);
+}
+
 ::-webkit-scrollbar-thumb:hover {
-  background: var(--fb-gray-400);
+  background: var(--fb-primary);
 }
 
 /* ==========================================================
@@ -2802,5 +2812,54 @@ small, .small { font-size: 0.8125rem; }
   .fb-bottom-inner {
     flex-direction: column;
     text-align: center;
+  }
+}
+
+/* ==========================================================
+   29. BACK TO TOP BUTTON
+   ========================================================== */
+.fb-back-to-top {
+  position: fixed;
+  bottom: 2rem;
+  right: 2rem;
+  z-index: 1020;
+  width: 44px;
+  height: 44px;
+  border: none;
+  border-radius: 50%;
+  background: var(--fb-primary);
+  color: var(--fb-white);
+  font-size: 1.2rem;
+  line-height: 1;
+  cursor: pointer;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.18);
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(12px);
+  transition: opacity var(--fb-transition-base),
+              visibility var(--fb-transition-base),
+              transform var(--fb-transition-base),
+              background var(--fb-transition-fast);
+}
+.fb-back-to-top.visible {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+.fb-back-to-top:hover {
+  background: var(--fb-primary-dark);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.22);
+}
+.fb-back-to-top:active {
+  transform: scale(0.92);
+}
+
+@media (max-width: 575.98px) {
+  .fb-back-to-top {
+    bottom: 1.25rem;
+    right: 1.25rem;
+    width: 40px;
+    height: 40px;
+    font-size: 1.05rem;
   }
 }

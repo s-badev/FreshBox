@@ -10,3 +10,20 @@ if (document.readyState === 'loading') {
 } else {
   requestAnimationFrame(() => document.body.classList.add('fb-ready'));
 }
+
+/* Back-to-top button */
+(() => {
+  const btn = document.createElement('button');
+  btn.className = 'fb-back-to-top';
+  btn.setAttribute('aria-label', 'Нагоре');
+  btn.innerHTML = '&#8679;';
+  document.body.appendChild(btn);
+
+  window.addEventListener('scroll', () => {
+    btn.classList.toggle('visible', window.scrollY > 300);
+  }, { passive: true });
+
+  btn.addEventListener('click', () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
+})();
