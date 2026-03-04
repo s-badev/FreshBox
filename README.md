@@ -47,6 +47,20 @@ FreshBox is a multi-page web application that simulates an online grocery store 
 - **Logged-in User**: Can browse the catalog, manage a shopping cart, place orders, and view personal order history.
 - **Admin**: Has all user permissions plus access to the admin panel for product CRUD and viewing all orders. Admin role is stored in the `user_roles` table.
 
+## 📸 Screenshots
+
+### Каталог (Catalog)
+![Catalog](docs/catalog.png)
+
+### Кошница (Cart)
+![Cart](docs/cart.png)
+
+### Моите поръчки (Orders)
+![Orders](docs/orders.png)
+
+### Админ панел (Admin Panel)
+![Admin](docs/admin.png)
+
 ## 🏗️ Architecture
 
 FreshBox follows a multi-page client-server architecture with Supabase as the backend:
