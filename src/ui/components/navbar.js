@@ -31,6 +31,12 @@ export async function renderNavbar(activePage = '') {
           <input type="text" id="headerSearchInput" placeholder="Търси продукти..." aria-label="Търсене">
           <button type="button" class="fb-header-search-btn" id="headerSearchBtn" aria-label="Търси">🔍</button>
         </div>
+
+        <button type="button" class="fb-hamburger" id="hamburgerBtn" aria-label="Меню">
+          <span class="fb-hamburger-line"></span>
+          <span class="fb-hamburger-line"></span>
+          <span class="fb-hamburger-line"></span>
+        </button>
       </div>
 
       <!-- Row 2: Navigation links -->
@@ -61,6 +67,19 @@ export function setupNavbarHandlers() {
   // Greeting for logged-in user
   renderGreeting();
   setupGreetingListener();
+
+  // Hamburger menu toggle
+  const hamburgerBtn = document.querySelector('#hamburgerBtn');
+  const header = document.querySelector('.fb-header');
+  if (hamburgerBtn && header) {
+    hamburgerBtn.addEventListener('click', () => {
+      header.classList.toggle('fb-nav-open');
+    });
+    // Close menu when a nav link is clicked
+    header.querySelectorAll('.fb-header-nav-link, .fb-header-logout-btn').forEach(link => {
+      link.addEventListener('click', () => header.classList.remove('fb-nav-open'));
+    });
+  }
 
   // Logout
   const logoutBtn = document.querySelector('#logoutBtn');

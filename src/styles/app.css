@@ -1886,14 +1886,92 @@ small, .small { font-size: 0.8125rem; }
   letter-spacing: 0.01em;
 }
 
-/* Mobile header responsive */
-@media (max-width: 767.98px) {
+/* ─── Hamburger button (hidden on desktop) ─── */
+.fb-hamburger {
+  display: none;
+  flex-direction: column;
+  justify-content: center;
+  gap: 4px;
+  width: 36px;
+  height: 36px;
+  padding: 6px;
+  background: rgba(255,255,255,.12);
+  border: 1px solid rgba(255,255,255,.25);
+  border-radius: var(--fb-radius-sm);
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: background var(--fb-transition-fast);
+}
+.fb-hamburger:hover { background: rgba(255,255,255,.2); }
+.fb-hamburger-line {
+  display: block;
+  width: 100%;
+  height: 2px;
+  background: var(--fb-white);
+  border-radius: 1px;
+  transition: transform var(--fb-transition-fast), opacity var(--fb-transition-fast);
+}
+/* Animate to X when open */
+.fb-nav-open .fb-hamburger-line:nth-child(1) { transform: translateY(6px) rotate(45deg); }
+.fb-nav-open .fb-hamburger-line:nth-child(2) { opacity: 0; }
+.fb-nav-open .fb-hamburger-line:nth-child(3) { transform: translateY(-6px) rotate(-45deg); }
+
+/* ─── Mobile header responsive (≤ 900px) ─── */
+@media (max-width: 900px) {
   body { padding-top: var(--fb-header-h-mobile); }
   .fb-header-row1 { flex-wrap: wrap; gap: var(--fb-sp-2); }
-  .fb-header-search { order: 3; max-width: none; flex-basis: 100%; }
+  .fb-header-search { order: 2; flex: 1 1 0; min-width: 0; }
   .fb-header-brand { font-size: 1.15rem; }
-  .fb-header-row2-inner { gap: 0; }
-  .fb-header-nav-link { font-size: 0.75rem; padding: 0.45rem 0.6rem; }
+
+  /* Show hamburger */
+  .fb-hamburger { display: flex; order: 3; }
+
+  /* Collapse nav row */
+  .fb-header-row2 {
+    display: none;
+  }
+  .fb-nav-open .fb-header-row2 {
+    display: block;
+  }
+
+  .fb-header-row2-inner {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0;
+    padding: var(--fb-sp-2) var(--fb-sp-4);
+    overflow-x: visible;
+  }
+
+  /* Stack links vertically */
+  .fb-header-nav-link {
+    font-size: 0.85rem;
+    padding: 0.6rem 0.5rem;
+    border-radius: var(--fb-radius-sm);
+  }
+  .fb-header-nav-link:hover {
+    background: rgba(255,255,255,.1);
+  }
+  .fb-header-nav-link.active::after { display: none; }
+
+  /* Remove spacer on mobile — items are stacked */
+  .fb-nav-spacer { display: none; }
+
+  /* Greeting & logout full width */
+  .fb-greeting {
+    padding: 0.5rem;
+    font-size: 0.82rem;
+  }
+  .fb-header-logout-btn {
+    margin-top: var(--fb-sp-1);
+    text-align: center;
+    width: 100%;
+  }
+}
+
+/* Small phone tweaks */
+@media (max-width: 480px) {
+  .fb-header-search { flex-basis: 100%; order: 3; }
+  .fb-hamburger { order: 2; }
 }
 
 /* ==========================================================
