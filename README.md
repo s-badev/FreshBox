@@ -77,7 +77,7 @@ FreshBox follows a multi-page client-server architecture with Supabase as the ba
 - **Database**: PostgreSQL
 - **Authentication**: Supabase Auth (email/password)
 - **Storage**: Supabase Storage (product images via `product-images` bucket)
-- **API**: Auto-generated REST API from Supabase client
+- **API**: Supabase PostgREST API accessed through the supabase-js client
 - **Security**: Row Level Security (RLS) policies with `is_admin()` helper function
 
 ### Deployment
