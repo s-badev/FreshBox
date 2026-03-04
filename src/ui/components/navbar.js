@@ -1,6 +1,7 @@
 import { getSession, signOut } from '../../services/authService.js';
 import { isAdmin } from '../../services/roleService.js';
 import { getTotals } from '../../services/cartService.js';
+import { renderGreeting, setupGreetingListener } from '../../utils/greeting.js';
 
 export async function renderNavbar(activePage = '') {
   // Check if user is logged in and if they are admin
@@ -44,6 +45,7 @@ export async function renderNavbar(activePage = '') {
             <a class="fb-header-nav-link ${activePage === 'admin' ? 'active' : ''}" href="/admin.html">⚙️ Админ</a>
           ` : ''}
           ${isLoggedIn ? `
+            <span id="fbGreeting" class="fb-greeting"></span>
             <button class="fb-header-logout-btn" id="logoutBtn">Изход</button>
           ` : `
             <a class="fb-header-nav-link ${activePage === 'login' ? 'active' : ''}" href="/login.html">👤 Вход</a>
@@ -56,6 +58,10 @@ export async function renderNavbar(activePage = '') {
 
 // Setup logout + search handler after navbar is rendered
 export function setupNavbarHandlers() {
+  // Greeting for logged-in user
+  renderGreeting();
+  setupGreetingListener();
+
   // Logout
   const logoutBtn = document.querySelector('#logoutBtn');
   if (logoutBtn) {

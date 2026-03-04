@@ -1869,6 +1869,16 @@ small, .small { font-size: 0.8125rem; }
   border-color: rgba(255,255,255,.4);
 }
 
+/* User greeting */
+.fb-greeting {
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: rgba(255,255,255,.85);
+  white-space: nowrap;
+  padding: 0.3rem 0.5rem;
+  letter-spacing: 0.01em;
+}
+
 /* Mobile header responsive */
 @media (max-width: 767.98px) {
   #nav { min-height: 110px; }
