@@ -2566,9 +2566,10 @@ small, .small { font-size: 0.8125rem; }
 
 /* ─── Layer 3 : Main Footer ─── */
 .fb-footer-main {
-  background: var(--fb-gray-900);
+  background: linear-gradient(135deg, var(--fb-primary-dark) 0%, var(--fb-primary) 60%, #10a06e 100%);
+  border-top: 1px solid rgba(255, 255, 255, 0.15);
   padding: var(--fb-sp-10) 0 var(--fb-sp-8);
-  color: var(--fb-gray-400);
+  color: rgba(255, 255, 255, 0.78);
 }
 .fb-footer-grid {
   display: grid;
@@ -2582,7 +2583,7 @@ small, .small { font-size: 0.8125rem; }
   font-size: 0.78rem;
   text-transform: uppercase;
   letter-spacing: 0.07em;
-  color: var(--fb-gray-200);
+  color: rgba(255, 255, 255, 0.9);
   margin: 0 0 var(--fb-sp-3) 0;
 }
 .fb-fcol-heading--mt {
@@ -2599,13 +2600,13 @@ small, .small { font-size: 0.8125rem; }
   gap: var(--fb-sp-2);
 }
 .fb-fcol-links a {
-  color: var(--fb-gray-400);
+  color: rgba(255, 255, 255, 0.78);
   text-decoration: none;
   font-size: 0.84rem;
   transition: color var(--fb-transition-fast), padding-left var(--fb-transition-fast);
 }
 .fb-fcol-links a:hover {
-  color: var(--fb-white);
+  color: rgba(255, 255, 255, 0.95);
   padding-left: 3px;
 }
 
@@ -2622,8 +2623,8 @@ small, .small { font-size: 0.8125rem; }
   width: 36px;
   height: 36px;
   border-radius: 50%;
-  background: var(--fb-gray-800);
-  color: var(--fb-gray-400);
+  background: rgba(255, 255, 255, 0.12);
+  color: rgba(255, 255, 255, 0.78);
   font-size: 1rem;
   text-decoration: none;
   transition: background var(--fb-transition-fast), color var(--fb-transition-fast), transform var(--fb-transition-fast);
@@ -2652,17 +2653,17 @@ small, .small { font-size: 0.8125rem; }
   font-size: 0.7rem;
   font-weight: 600;
   letter-spacing: 0.03em;
-  border: 1px solid var(--fb-gray-700);
+  border: 1px solid rgba(255, 255, 255, 0.2);
   border-radius: var(--fb-radius-pill);
-  color: var(--fb-gray-300);
-  background: var(--fb-gray-800);
+  color: rgba(255, 255, 255, 0.78);
+  background: rgba(255, 255, 255, 0.1);
   white-space: nowrap;
 }
 
 /* ─── Bottom Bar ─── */
 .fb-footer-bottom {
-  background: #0b1220;
-  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(0, 0, 0, 0.18);
+  border-top: 1px solid rgba(255, 255, 255, 0.12);
   padding: var(--fb-sp-4) 0;
 }
 .fb-bottom-inner {
