@@ -1269,31 +1269,64 @@ small, .small { font-size: 0.8125rem; }
   position: relative;
   overflow: hidden;
   isolation: isolate;
+
+  /* ── Layer A: 4 soft radial orbs + Layer B: depth linear + Layer C: grain ── */
+  background:
+    /* Grain (Layer C) — repeating micro-pattern, very low opacity */
+    repeating-linear-gradient(
+      45deg,
+      rgba(11, 138, 94, 0.018) 0px,
+      rgba(11, 138, 94, 0.018) 1px,
+      transparent 1px,
+      transparent 12px
+    ),
+    /* Depth linear (Layer B) — top-to-bottom tint */
+    linear-gradient(
+      175deg,
+      rgba(232, 248, 242, 0.55) 0%,
+      rgba(246, 248, 247, 0.10) 100%
+    ),
+    /* Orb — top-left (Layer A) */
+    radial-gradient(ellipse 65% 50% at -5% 10%, rgba(11, 138, 94, 0.13) 0%, transparent 70%),
+    /* Orb — top-right (Layer A) */
+    radial-gradient(ellipse 50% 45% at 105% 5%, rgba(6, 112, 75, 0.10) 0%, transparent 65%),
+    /* Orb — center-left (Layer A) */
+    radial-gradient(ellipse 40% 55% at 0% 55%, rgba(16, 160, 110, 0.08) 0%, transparent 60%),
+    /* Orb — bottom-right (Layer A) */
+    radial-gradient(ellipse 60% 45% at 110% 100%, rgba(11, 138, 94, 0.11) 0%, transparent 70%),
+    /* Base */
+    #f4f7f5;
 }
 
-/* Radial gradient orbs — Stripe/Linear style */
-.auth-wrapper::before,
-.auth-wrapper::after {
+/* Centered halo behind the card */
+.auth-wrapper::before {
   content: '';
   position: absolute;
+  width: 480px;
+  height: 360px;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: radial-gradient(ellipse 70% 60% at 50% 50%, rgba(11, 138, 94, 0.14) 0%, transparent 72%);
+  filter: blur(48px);
   border-radius: 50%;
-  filter: blur(72px);
   pointer-events: none;
   z-index: -1;
 }
-.auth-wrapper::before {
-  width: 520px;
-  height: 520px;
-  background: radial-gradient(circle, rgba(11, 138, 94, 0.22) 0%, transparent 70%);
-  top: -120px;
-  left: -100px;
-}
+
+/* Secondary accent orb — lower-right */
 .auth-wrapper::after {
-  width: 420px;
-  height: 420px;
-  background: radial-gradient(circle, rgba(16, 160, 110, 0.16) 0%, transparent 70%);
-  bottom: -100px;
-  right: -80px;
+  content: '';
+  position: absolute;
+  width: 340px;
+  height: 340px;
+  bottom: -80px;
+  right: -60px;
+  background: radial-gradient(circle, rgba(4, 80, 56, 0.09) 0%, transparent 70%);
+  filter: blur(56px);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: -1;
 }
 
 .auth-card {
