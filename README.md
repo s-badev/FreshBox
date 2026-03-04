@@ -2,6 +2,32 @@
 
 A mini e-commerce platform for fresh produce delivery, built with Vanilla JavaScript, Bootstrap, and Supabase. FreshBox provides catalog browsing, shopping cart, order management, and an admin panel.
 
+## 🌐 Live Demo
+
+**[https://freshbox-bg.netlify.app](https://freshbox-bg.netlify.app)**
+
+## 🔑 Sample Credentials
+
+The following accounts **already exist** in the live demo. Just log in — no registration needed.
+
+| Role | Email | Password | What you'll see |
+|---|---|---|---|
+| **User** | `demo@freshbox.bg` | `demo1234` | Каталог, Кошница, Поръчки. **No** "Админ" link; `/admin.html` is denied. |
+| **Admin** | `admin@freshbox.bg` | `admin12345` | Everything above **+** "⚙️ Админ" link in navbar; full admin panel access. |
+
+<details>
+<summary>🔧 (Optional) Assigning admin role manually — only if recreating accounts from scratch</summary>
+
+If you create fresh accounts and need to grant admin access, run in Supabase SQL Editor:
+
+```sql
+INSERT INTO public.user_roles (user_id, role)
+VALUES ('<user-uuid-from-auth.users>', 'admin')
+ON CONFLICT (user_id) DO UPDATE SET role = 'admin';
+```
+
+</details>
+
 ## 📋 Project Description
 
 FreshBox is a multi-page web application that simulates an online grocery store for fresh produce. Users can browse a product catalog, add items to a shopping cart, place orders, and track order history. Administrators can manage products and view all orders through a dedicated admin panel.
@@ -254,6 +280,7 @@ Run migrations **in order** using the Supabase SQL Editor:
    - `supabase/migrations/001_init_schema.sql`
    - `supabase/migrations/002_rls_policies.sql`
    - `supabase/migrations/003_roles_fix.sql`
+   - `supabase/migrations/004_storage_product_images.sql`
 
 > ⚠️ **Important**: Apply migrations in the exact order listed above. Never edit an already-applied migration — create a new one instead.
 
@@ -296,6 +323,9 @@ All migration files are in `supabase/migrations/`. Apply them in order:
 | 1 | `001_init_schema.sql` | Core tables: `profiles`, `user_roles`, `categories`, `products`, `orders`, `order_items`; `order_status` enum; indexes |
 | 2 | `002_rls_policies.sql` | Enable RLS on all tables; `is_admin()` helper function; per-table access policies |
 | 3 | `003_roles_fix.sql` | Add unique index on `user_roles(user_id)`; fix `is_admin()` function |
+| 4 | `004_storage_product_images.sql` | Create Supabase Storage bucket `product-images` for product image uploads |
+
+> 📸 **Storage**: Product images are stored in the Supabase Storage bucket **`product-images`**. The `products.image_path` column holds the relative path within that bucket.
 
 **Seed files** (in `supabase/seeds/`):
 
@@ -324,17 +354,21 @@ FreshBox/
 │   │   ├── cartService.js          # localStorage cart (add, remove, update, totals)
 │   │   ├── catalogService.js       # Fetch products & categories
 │   │   ├── orderService.js         # Create orders from cart
-│   │   └── roleService.js          # Admin role check
+│   │   ├── roleService.js          # Admin role check
+│   │   └── adminService.js         # Admin CRUD (products, categories, orders, storage)
 │   ├── ui/                         # Reusable UI modules
 │   │   └── components/
-│   │       └── navbar.js           # Shared navbar with active page & cart badge
+│   │       ├── navbar.js           # Shared navbar with active page & cart badge
+│   │       ├── footer.js           # Global footer component
+│   │       └── productQuickView.js # Product quick-view modal
 │   └── styles/
 │       └── app.css                 # Custom design system & global styles
 ├── supabase/                       # Database & backend
 │   ├── migrations/                 # SQL migration files (versioned, ordered)
 │   │   ├── 001_init_schema.sql
 │   │   ├── 002_rls_policies.sql
-│   │   └── 003_roles_fix.sql
+│   │   ├── 003_roles_fix.sql
+│   │   └── 004_storage_product_images.sql
 │   └── seeds/                      # Sample data scripts
 │       └── 002_seed_catalog.sql
 ├── public/                         # Static assets
@@ -374,12 +408,15 @@ Each HTML page is a separate Vite entry point with its own `<script type="module
 - **`supabaseClient.js`**: Exports configured `supabase` instance using env vars
 - **`authService.js`**: `login()`, `register()`, `logout()`, `getSession()`
 - **`cartService.js`**: `getCart()`, `addToCart()`, `updateQty()`, `removeItem()`, `clearCart()`, `getTotals()`
-- **`catalogService.js`**: `fetchProducts()`, `fetchCategories()`
+- **`catalogService.js`**: `fetchProducts()`, `fetchCategories()`, `getProductImageUrl()`
 - **`orderService.js`**: `createOrderFromCart()`, `fetchMyOrders()`
 - **`roleService.js`**: `isAdmin()` check via Supabase RPC
+- **`adminService.js`**: Admin CRUD operations for products, categories, orders, and image storage
 
 #### Components (`src/ui/components/`)
 - **`navbar.js`**: Shared navigation bar with active page highlighting, auth-aware links, admin link visibility, and live cart item count badge
+- **`footer.js`**: Global footer with support strip, app banner, link columns, social icons, and payment badges
+- **`productQuickView.js`**: Quick-view modal for product details with similar products and add-to-cart
 
 #### Styles (`src/styles/`)
 - **`app.css`**: Complete custom design system — CSS variables, typography, navbar, buttons, cards, catalog grid, cart layout, order accordion, toasts, responsive overrides, print styles
@@ -390,16 +427,19 @@ Each HTML page is a separate Vite entry point with its own `<script type="module
 ## 🌐 Deployment (Netlify)
 
 ### Live URL
-> _To be added after deployment_
+
+**[https://freshbox-bg.netlify.app](https://freshbox-bg.netlify.app)**
 
 ### Environment Variables
 
-Set these in **Netlify → Site Settings → Environment Variables**:
+Set these in **Netlify → Site Settings → Environment Variables → Add variable**:
 
-| Variable | Description |
-|---|---|
-| `VITE_SUPABASE_URL` | Supabase project URL |
-| `VITE_SUPABASE_ANON_KEY` | Supabase anonymous/public API key |
+| Variable | Description | Example |
+|---|---|---|
+| `VITE_SUPABASE_URL` | Supabase Project URL | `https://xxxx.supabase.co` |
+| `VITE_SUPABASE_ANON_KEY` | Supabase publishable key (anon/public) | `sb_publishable_...` |
+
+> These are build-time variables. After adding or changing them, **trigger a new deploy** for changes to take effect.
 
 ### Build Settings
 
@@ -409,18 +449,10 @@ Set these in **Netlify → Site Settings → Environment Variables**:
 | Publish directory | `dist` |
 | Node version | 18+ |
 
-## 🔑 Sample Credentials
+## ❓ Troubleshooting
 
-> Create these accounts via the app's register page, then assign the admin role in the database.
-
-| Role | Email | Password | Notes |
-|---|---|---|---|
-| User | `demo@freshbox.bg` | `demo1234` | Regular user account |
-| Admin | `admin@freshbox.bg` | `admin12345` | Insert row into `user_roles` with `role = 'admin'` |
-
-To grant admin access, run in Supabase SQL Editor:
-```sql
-INSERT INTO public.user_roles (user_id, role)
-VALUES ('<user-uuid-from-auth.users>', 'admin')
-ON CONFLICT (user_id) DO UPDATE SET role = 'admin';
-```
+| Issue | Solution |
+|---|---|
+| **Product image not updating after re-upload with same filename** | CDN / browser cache. Use hard refresh (`Ctrl+Shift+R`) or upload with a new filename and update the product's `image_path`. |
+| **"Админ" link missing in navbar** | The logged-in user doesn't have an `admin` role in `user_roles`. See the optional SQL snippet in the Sample Credentials section above. |
+| **White flash (FOUC) between pages** | Already mitigated with inline critical CSS in all HTML `<head>` tags. If still visible, ensure the build is up to date (`npm run build`). |
