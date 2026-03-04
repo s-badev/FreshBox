@@ -1266,6 +1266,34 @@ small, .small { font-size: 0.8125rem; }
   display: flex;
   align-items: center;
   justify-content: center;
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+}
+
+/* Radial gradient orbs — Stripe/Linear style */
+.auth-wrapper::before,
+.auth-wrapper::after {
+  content: '';
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(72px);
+  pointer-events: none;
+  z-index: -1;
+}
+.auth-wrapper::before {
+  width: 520px;
+  height: 520px;
+  background: radial-gradient(circle, rgba(11, 138, 94, 0.22) 0%, transparent 70%);
+  top: -120px;
+  left: -100px;
+}
+.auth-wrapper::after {
+  width: 420px;
+  height: 420px;
+  background: radial-gradient(circle, rgba(16, 160, 110, 0.16) 0%, transparent 70%);
+  bottom: -100px;
+  right: -80px;
 }
 
 .auth-card {
