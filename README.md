@@ -10,6 +10,12 @@ A mini e-commerce platform for fresh produce delivery, built with Vanilla JavaSc
 Note: The Live Demo may be temporarily paused due to Netlify free-tier usage limits.
 The full source code, screenshots and functionality can be reviewed in this repository.
 
+If the demo is paused, the project can still be fully reviewed through:
+- the source code
+- the screenshots
+- the architecture documentation in this repository
+
+
 ## 🔑 Sample Credentials
 
 The following accounts **already exist** in the live demo. Just log in — no registration needed.
