@@ -71,6 +71,9 @@ FreshBox is a multi-page web application that simulates an online grocery store 
 ### Админ панел (Admin Panel)
 ![Admin](docs/admin.png)
 
+### Footer & Contact Section
+![Footer](docs/footer.png)
+
 ## 🏗️ Architecture
 
 FreshBox follows a multi-page client-server architecture with Supabase as the backend:
