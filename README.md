@@ -50,7 +50,7 @@ FreshBox is a multi-page web application that simulates an online grocery store 
 
 ---
 
-## Application Screens
+## 🖥️ Application Screens
 
 FreshBox includes the following main screens:
 
@@ -91,7 +91,7 @@ FreshBox includes the following main screens:
 ### Footer & Contact Section
 ![Footer](docs/footer.png)
 
-## Quick Test Guide
+## 🧪 Quick Test Guide
 
 Use this flow to review the project quickly:
 
@@ -510,7 +510,7 @@ Set these in **Netlify → Site Settings → Environment Variables → Add varia
 | Publish directory | `dist` |
 | Node version | 18+ |
 
-## ❓ Troubleshooting
+## 🛠️ Troubleshooting
 
 | Issue | Solution |
 |---|---|
