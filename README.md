@@ -48,6 +48,32 @@ FreshBox is a multi-page web application that simulates an online grocery store 
 - **Logged-in User**: Can browse the catalog, manage a shopping cart, place orders, and view personal order history.
 - **Admin**: Has all user permissions plus access to the admin panel for product CRUD and viewing all orders. Admin role is stored in the `user_roles` table.
 
+---
+
+## Application Screens
+
+FreshBox includes the following main screens:
+
+1. **Home Page**  
+   Landing page with project branding and navigation.
+
+2. **Login / Register**  
+   Authentication flow using Supabase Auth.
+
+3. **Catalog**  
+   Product listing with images, categories, and shopping actions.
+
+4. **Cart**  
+   Selected products, quantity handling, and order preparation.
+
+5. **Orders**  
+   Logged-in users can view their own orders.
+
+6. **Admin Panel**  
+   Restricted area for admin users only.
+
+---
+
 ## 📸 Screenshots
 
 ### Каталог (Catalog)
@@ -64,6 +90,23 @@ FreshBox is a multi-page web application that simulates an online grocery store 
 
 ### Footer & Contact Section
 ![Footer](docs/footer.png)
+
+## Quick Test Guide
+
+Use this flow to review the project quickly:
+
+1. Open the live demo  
+2. Log in with the **demo user**
+3. Open **Catalog**
+4. Add products to the **Cart**
+5. Open **Cart** and place an order
+6. Open **Orders** and verify the created order
+7. Log out
+8. Log in with the **admin account**
+9. Open **Admin Panel**
+10. Verify admin-only access and management functionality
+
+---
 
 ## 🏗️ Architecture
 
@@ -474,3 +517,28 @@ Set these in **Netlify → Site Settings → Environment Variables → Add varia
 | **Product image not updating after re-upload with same filename** | CDN / browser cache. Use hard refresh (`Ctrl+Shift+R`) or upload with a new filename and update the product's `image_path`. |
 | **"Админ" link missing in navbar** | The logged-in user doesn't have an `admin` role in `user_roles`. See the optional SQL snippet in the Sample Credentials section above. |
 | **White flash (FOUC) between pages** | Already mitigated with inline critical CSS in all HTML `<head>` tags. If still visible, ensure the build is up to date (`npm run build`). |
+
+## 🎯 Conclusion
+
+FreshBox is a complete mini e-commerce web application that demonstrates practical use of modern front-end development together with backend services through Supabase.
+
+The project includes:
+
+- authentication
+- role-based access control
+- product catalog
+- shopping cart
+- order flow
+- admin functionality
+- file storage
+- deployment
+- structured documentation
+
+It is designed not as a static demo, but as a functional multi-page application that covers the main capstone requirements in a realistic product scenario.
+
+---
+
+## 🔗 Repository
+
+**GitHub:**  
+https://github.com/s-badev/FreshBox
