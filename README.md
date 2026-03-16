@@ -534,8 +534,6 @@ The project includes:
 - deployment
 - structured documentation
 
-It is designed not as a static demo, but as a functional multi-page application that covers the main capstone requirements in a realistic product scenario.
-
 ---
 
 ## 🔗 Repository
