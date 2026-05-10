@@ -1,11 +1,59 @@
-﻿# FreshBox
+# 🥬 FreshBox — Fresh Produce E-Commerce Web App
 
-A mini e-commerce platform for fresh produce delivery, built with Vanilla JavaScript, Bootstrap, and Supabase. FreshBox provides catalog browsing, shopping cart, order management, and an admin panel.
+<p align="left">
+  <a href="https://freshbox-bg.netlify.app">
+    <img src="https://img.shields.io/badge/Live%20Demo-Open%20App-brightgreen?style=for-the-badge&logo=netlify" alt="Live Demo"/>
+  </a>
+  <a href="https://github.com/s-badev/FreshBox">
+    <img src="https://img.shields.io/badge/GitHub-Repository-black?style=for-the-badge&logo=github" alt="GitHub Repository"/>
+  </a>
+</p>
 
-## 🌐 Live Demo
+<p align="left">
+  <img src="https://img.shields.io/badge/JavaScript-ES6+-yellow?logo=javascript" />
+  <img src="https://img.shields.io/badge/HTML-5-orange?logo=html5" />
+  <img src="https://img.shields.io/badge/CSS-3-blue?logo=css3" />
+  <img src="https://img.shields.io/badge/Bootstrap-5-purple?logo=bootstrap" />
+  <img src="https://img.shields.io/badge/Vite-Build%20Tool-646CFF?logo=vite" />
+  <img src="https://img.shields.io/badge/Supabase-Backend-3ECF8E?logo=supabase" />
+  <img src="https://img.shields.io/badge/PostgreSQL-Database-336791?logo=postgresql" />
+  <img src="https://img.shields.io/badge/Netlify-Deployed-00C7B7?logo=netlify" />
+  <img src="https://img.shields.io/badge/Status-Portfolio%20Project-success" />
+</p>
 
-**[https://freshbox-bg.netlify.app](https://freshbox-bg.netlify.app)**
+FreshBox is a multi-page fresh produce e-commerce web application built with **Vanilla JavaScript**, **Bootstrap 5**, **Supabase**, and **Vite**.
 
+The app includes product browsing, category filtering, shopping cart functionality, checkout flow, user authentication, order history, and an admin-oriented product/order management panel.
+
+---
+
+## ✨ Highlights
+
+- 🛒 Product catalog with search and category filtering
+- 🧺 Shopping cart with persistent state
+- 🔐 Supabase authentication
+- 🗄️ PostgreSQL-backed order and product data
+- 🛡️ Row Level Security concepts
+- 🧑‍💼 Role-based admin access
+- 📦 Supabase Storage integration
+- ⚡ Vite-powered development workflow
+- 🚀 Deployed on Netlify
+
+---
+
+## 🧭 Application Flow
+
+```mermaid
+flowchart TD
+    A[Visitor opens FreshBox] --> B[Browse product catalog]
+    B --> C[Search and filter products]
+    C --> D[Add products to cart]
+    D --> E[Checkout]
+    E --> F[User authentication]
+    F --> G[Create order in Supabase]
+    G --> H[Order history]
+    G --> I[Admin order management]
+    I --> J[Product and order oversight]
 
 ## 🔑 Sample Credentials
 
