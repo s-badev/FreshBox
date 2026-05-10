@@ -54,6 +54,9 @@ flowchart TD
     G --> H[Order history]
     G --> I[Admin order management]
     I --> J[Product and order oversight]
+```
+
+---
 
 ## 🔑 Sample Credentials
 
